@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".items.ItemListFragment"
+    style="@style/screen_style">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        style="@style/screen_style">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:title="Мои дела"
+            app:expandedTitleMarginStart="40dp"
+            app:expandedTitleMarginBottom="70dp"
+            app:expandedTitleTextAppearance="@style/CustomExpandedTitleTextAppearance"
+            app:collapsedTitleTextAppearance="@style/CustomCollapsedTitleTextAppearance"
+            app:contentScrim="@color/back_light_primary"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            style="@style/screen_style"
+            android:id="@+id/collapsing_toolbar">
+
+
+            <TextView
+                android:id="@+id/done_item_counter_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="125dp"
+                android:text="Выполнено - 0"
+                android:textSize="22dp"
+                android:layout_marginStart="40dp"
+                android:textStyle="bold"
+                style="@style/done_style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.25"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/my_items_header">
+
+            </TextView>
+
+            <ToggleButton
+                android:id="@+id/achievement_visible"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="120dp"
+                android:layout_marginEnd="40dp"
+                android:layout_gravity="end"
+                android:textOn=""
+                android:textOff=""
+                app:layout_constraintVertical_bias="0.5"
+                android:background="@drawable/button_visibility_selector"
+                />
+
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/screen_style"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin">
+
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/items_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        style="@style/recycler_background_style"
+        android:elevation="3dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/done_item_counter_text">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="40dp"
+        app:tint="@color/white"
+        android:backgroundTint="@color/primary_blue"
+        android:src="@drawable/baseline_add_24"
+        app:shapeAppearance="@style/RoundFAB">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

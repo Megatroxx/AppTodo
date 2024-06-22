@@ -1,9 +1,110 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.AppTodo" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.AppTodo" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#3A55EA</item>
     </style>
 
-    <style name="Theme.AppTodo" parent="Base.Theme.AppTodo" />
+    <style name="screen_style">
+        <item name="android:background">@color/back_light_primary</item>
+    </style>
+
+
+
+    <style name="done_style">
+        <item name="android:textColor">@color/light_grey</item>
+    </style>
+
+    <style name="item_background">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="standart_color_text">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="recycler_background_style">
+        <item name="android:background">@drawable/itemlist_background</item>
+    </style>
+
+    <style name="item_info_button">
+        <item name="android:src">@drawable/info</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="close_button">
+        <item name="android:src">@drawable/baseline_close_24</item>
+    </style>
+
+    <style name="add_text_background">
+        <item name="android:background">@drawable/add_text_background</item>
+    </style>
+
+    <style name="hint_color">
+        <item name="android:textColorHint">@color/light_grey</item>
+    </style>
+
+
+
+    <style name="Theme.ToDoApp" parent="Base.Theme.AppTodo" />
+
+    <style name="CustomCollapsedTitleTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="CustomExpandedTitleTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RoundFAB" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="android:radius">40dp</item>
+    </style>
+
+    <style name="switcher_style" parent="Theme.AppCompat.Light">
+
+        <item name="colorPrimary">@color/light_blue</item>
+
+        <item name="colorPrimaryDark">@color/primary_blue</item>
+
+        <item name="colorAccent">@color/grey_text</item>
+
+        <item name="colorControlNormal">@color/light_blue</item>
+
+        <item name="colorControlActivated">@color/primary_blue</item>
+
+
+    </style>
+
+    <style name="DatePicker1" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/primary_blue</item>
+
+        <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyled</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyled</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/DialogButtonStyled</item>
+
+    </style>
+
+
+
+    <style name="DialogButtonStyled" parent="Theme.MaterialComponents.Light">
+        <item name="android:textColor">@color/primary_blue</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="MyOutlinedBoxDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="android:popupBackground">@color/black</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DropDownMenuItem" parent="Theme.MaterialComponents.Light">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+
 </resources>
