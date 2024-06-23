@@ -1,22 +1,23 @@
-package com.example.apptodo
+package com.example.apptodo.ui
 
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.apptodo.app.App
+import com.example.apptodo.interfaces.CheckBoxListener
+import com.example.apptodo.interfaces.EditItemListener
+import com.example.apptodo.R
+import com.example.apptodo.design.SwipeGesture
+import com.example.apptodo.data.TodoItem
 
 import com.example.apptodo.databinding.FragmentItemListBinding
-import com.google.android.material.appbar.AppBarLayout
+import com.example.apptodo.viewmodels.ItemListViewModel
 
 
 class ItemListFragment : Fragment(), CheckBoxListener, EditItemListener {

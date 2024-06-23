@@ -1,6 +1,7 @@
-package com.example.apptodo
+package com.example.apptodo.data
 
 import android.content.SharedPreferences
+import com.example.apptodo.design.Relevance
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

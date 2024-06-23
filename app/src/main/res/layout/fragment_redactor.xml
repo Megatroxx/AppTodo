@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".redactor.RedactorFragment"
+    tools:context=".ui.RedactorFragment"
     android:orientation="vertical"
     style="@style/screen_style">
     <!--    android:background="@color/back_light_primary">-->
@@ -50,11 +50,9 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/scroll_view"
@@ -65,9 +63,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-
-
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/nestedScrollView"
@@ -221,12 +216,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-
-
-
-
-
-
 
 </LinearLayout>

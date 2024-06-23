@@ -1,4 +1,4 @@
-package com.example.apptodo
+package com.example.apptodo.ui
 
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -6,16 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.apptodo.interfaces.CheckBoxListener
+import com.example.apptodo.interfaces.EditItemListener
 import com.example.apptodo.R
-import com.example.apptodo.Relevance
-import com.example.apptodo.ResourcesConstantsEnum
-import com.example.apptodo.TodoItem
+import com.example.apptodo.data.TodoItem
+import com.example.apptodo.design.Relevance
 import com.example.apptodo.databinding.TodoItemBinding
+import com.example.apptodo.design.ResourcesConstantsEnum
 
 class ItemsAdapter(
     private val checkBoxListener: CheckBoxListener,
@@ -48,8 +48,6 @@ class ItemsAdapter(
                 imageRelevance,
                 itemDeadline
             )
-
-
 
             descriptionText.text = item.text
             moreInformation.setOnClickListener {
@@ -116,8 +114,6 @@ class ItemsAdapter(
             textView.setTextAppearance(R.style.standart_color_text);
             dateText.paintFlags = dateText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             dateText.setTextAppearance(R.style.standart_color_text);
-
-
         }
 
     }
@@ -133,5 +129,10 @@ class ItemsAdapter(
 
     override fun onBindViewHolder(holder: ItemsViewHolder, position: Int) {
         holder.bind(toDoList[position], checkBoxListener, editItemListener)
+
+        holder.itemView.setOnClickListener {
+            val itemId = toDoList[position].id
+            editItemListener.onItemEdit(itemId)
+        }
     }
 }

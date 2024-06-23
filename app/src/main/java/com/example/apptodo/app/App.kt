@@ -1,7 +1,8 @@
-package com.example.apptodo
+package com.example.apptodo.app
 
 import android.app.Application
 import android.content.Context
+import com.example.apptodo.data.TodoItemsRepository
 
 class App : Application() {
 

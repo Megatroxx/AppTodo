@@ -1,7 +1,6 @@
-package com.example.apptodo
+package com.example.apptodo.ui
 
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,16 +9,16 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import android.widget.Toast
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.apptodo.App
+import com.example.apptodo.app.App
 import com.example.apptodo.R
-import com.example.apptodo.Relevance
-import com.example.apptodo.TodoItem
+import com.example.apptodo.design.Relevance
+import com.example.apptodo.data.TodoItem
 import com.example.apptodo.databinding.FragmentRedactorBinding
+import com.example.apptodo.viewmodels.RedactorViewModel
 import java.util.GregorianCalendar
 import java.util.UUID
 
@@ -80,6 +79,10 @@ class RedactorFragment : Fragment() {
                 binding.dateText.visibility = View.GONE
             }
         })
+
+        binding.dateText.setOnClickListener {
+            showDatePickerDialog()
+        }
 
         viewModel.item.observe(viewLifecycleOwner){ item ->
             binding.textDescription.setText(item.text)

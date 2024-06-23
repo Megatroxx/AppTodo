@@ -1,14 +1,13 @@
-package com.example.apptodo
+package com.example.apptodo.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.apptodo.TodoItem
-import com.example.apptodo.TodoItemsRepository
+import com.example.apptodo.data.TodoItem
+import com.example.apptodo.data.TodoItemsRepository
 
 class RedactorViewModel(
     private val todoItemsRepository: TodoItemsRepository
