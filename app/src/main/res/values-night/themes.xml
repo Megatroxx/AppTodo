@@ -1,7 +1,91 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.AppTodo" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:windowBackground">@color/recycler_background_color</item>
+        <item name="colorOnBackground">@color/recycler_background_color</item>
+        <item name="colorPrimary">#3A55EA</item>
+
     </style>
+
+    <style name="screen_style">
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="done_style">
+        <item name="android:textColor">@color/dark_light_grey</item>
+    </style>
+
+    <style name="standart_color_text">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="recycler_background_style">
+        <item name="android:background">@drawable/dark_itemist_background</item>
+    </style>
+
+    <style name="item_info_button">
+        <item name="android:src">@drawable/dark_baseline_info_outline_24</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="close_button">
+        <item name="android:src">@drawable/dark_baseline_close_24</item>
+    </style>
+
+    <style name="add_text_background">
+        <item name="android:background">@drawable/dark_add_text_background</item>
+    </style>
+
+    <style name="hint_color">
+        <item name="android:textColorHint">@color/dark_light_grey</item>
+    </style>
+
+    <style name="MyOutlinedBoxDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="android:popupBackground">@color/black</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DropDownMenuItem" parent="Theme.MaterialComponents.Light">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/recycler_background_color</item>
+    </style>
+
+
+    <style name="switcher_style" parent="ThemeOverlay.MaterialComponents.Dialog">
+
+        <item name="colorPrimary">@color/light_blue</item>
+
+        <item name="colorPrimaryDark">@color/primary_blue</item>
+
+        <item name="colorAccent">@color/grey_text</item>
+
+        <item name="colorControlNormal">@color/light_blue</item>
+
+        <item name="colorControlActivated">@color/primary_blue</item>
+
+
+    </style>
+
+    <style name="DatePicker1" parent="ThemeOverlay.Material3.Dialog">
+        <item name="colorAccent">@color/primary_blue</item>
+
+        <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyled</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyled</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/DialogButtonStyled</item>
+
+    </style>
+
+
+
+    <style name="DialogButtonStyled" parent="Theme.MaterialComponents.Light">
+        <item name="android:textColor">@color/primary_blue</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
+
+
+
+
+
 </resources>

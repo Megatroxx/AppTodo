@@ -1,0 +1,13 @@
+<TextView
+    android:id="@+id/text_item_menu"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:text="Низкая"
+    style="@style/DropDownMenuItem"
+    android:gravity="center_vertical"
+    android:textStyle="bold"
+    android:textSize="14sp"
+    android:paddingStart="15dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+</TextView>

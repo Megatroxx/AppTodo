@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="back_light_primary">#F7F6F2</color>
+    <color name="grey_text">#575757</color>
+    <color name="primary_blue">#007AFF</color>
+    <color name="light_blue">#71B5FF</color>
+    <color name="red">#FF0000</color>
+    <color name="light_grey">#33000000</color>
+    <color name="dark_light_grey">#33FFFFFF</color>
+    <color name="recycler_background_color">#252528</color>
+    <color name="transparent">#00000000</color>
 </resources>
