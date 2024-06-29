@@ -1,4 +1,4 @@
-package com.example.apptodo.ui
+package com.example.apptodo.legacy_view
 
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -9,13 +9,10 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.example.apptodo.interfaces.CheckBoxListener
-import com.example.apptodo.interfaces.EditItemListener
 import com.example.apptodo.R
 import com.example.apptodo.data.TodoItem
-import com.example.apptodo.design.Relevance
+import com.example.apptodo.utils.Relevance
 import com.example.apptodo.databinding.TodoItemBinding
-import com.example.apptodo.design.ResourcesConstantsEnum
 
 class ItemsAdapter(
     private val checkBoxListener: CheckBoxListener,

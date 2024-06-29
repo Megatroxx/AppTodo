@@ -1,6 +1,6 @@
-package com.example.apptodo.ui
+package com.example.apptodo.legacy_view
 
-import android.app.DatePickerDialog
+/*import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.apptodo.app.App
 import com.example.apptodo.R
-import com.example.apptodo.design.Relevance
+import com.example.apptodo.utils.Relevance
 import com.example.apptodo.data.TodoItem
 import com.example.apptodo.databinding.FragmentRedactorBinding
 import com.example.apptodo.viewmodels.RedactorViewModel
@@ -206,4 +206,4 @@ class RedactorFragment : Fragment() {
         }
 
 
-}
+}*/

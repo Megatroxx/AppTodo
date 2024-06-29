@@ -1,30 +1,14 @@
-package com.example.apptodo.ui
+package com.example.apptodo.legacy_view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.apptodo.app.App
-import com.example.apptodo.interfaces.CheckBoxListener
-import com.example.apptodo.interfaces.EditItemListener
-import com.example.apptodo.R
-import com.example.apptodo.design.SwipeGesture
-import com.example.apptodo.data.TodoItem
-
-import com.example.apptodo.databinding.FragmentItemListBinding
-import com.example.apptodo.viewmodels.ItemListViewModel
-
+/*
 
 class ItemListFragment : Fragment(), CheckBoxListener, EditItemListener {
 
-    private val viewModel: ItemListViewModel by viewModels() {
+*/
+/*    private val viewModel: ItemListViewModel by viewModels() {
         ItemListViewModel.factory((requireActivity().application as App).todoItemsRepository)
-    }
+    }*//*
+
 
     private lateinit var binding: FragmentItemListBinding
 
@@ -40,8 +24,14 @@ class ItemListFragment : Fragment(), CheckBoxListener, EditItemListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+*/
+/*
         init()
+*//*
 
+
+*/
+/*
         viewModel.items.observe(viewLifecycleOwner) {
             binding.itemsRecycler.post {
                 adapter.update(it)
@@ -62,20 +52,25 @@ class ItemListFragment : Fragment(), CheckBoxListener, EditItemListener {
         binding.achievementVisible.setOnCheckedChangeListener { buttonView, isChecked ->
             viewModel.getItems(isChecked)
         }
+*//*
+
 
 
     }
 
 
-    private fun init() {
+*/
+/*    private fun init() {
         binding.apply {
             itemsRecycler.layoutManager = LinearLayoutManager(context)
             itemsRecycler.adapter = adapter
             swipeToGesture(itemsRecycler)
         }
-    }
+    }*//*
 
-    private fun swipeToGesture(recyclerView: RecyclerView) {
+
+*/
+/*    private fun swipeToGesture(recyclerView: RecyclerView) {
         val swipeGesture = object : SwipeGesture(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
@@ -92,13 +87,18 @@ class ItemListFragment : Fragment(), CheckBoxListener, EditItemListener {
 
         val touchHelper = ItemTouchHelper(swipeGesture)
         touchHelper.attachToRecyclerView(recyclerView)
-    }
+    }*//*
 
+
+*/
+/*
     override fun onCheckBoxClicked(
         item: TodoItem, isChecked: Boolean
     ) {
         viewModel.checkItem(item, isChecked)
     }
+*//*
+
 
     private fun changeFragment(fragment: Fragment) {
         val fragmentTransaction = requireActivity()
@@ -112,3 +112,4 @@ class ItemListFragment : Fragment(), CheckBoxListener, EditItemListener {
     }
 
 }
+*/

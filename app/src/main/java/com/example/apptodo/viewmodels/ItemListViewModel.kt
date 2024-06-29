@@ -1,62 +1,88 @@
 package com.example.apptodo.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.viewModelScope
 import com.example.apptodo.data.TodoItem
 import com.example.apptodo.data.TodoItemsRepository
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class ItemListViewModel(
     private val todoItemsRepository: TodoItemsRepository
 ) : ViewModel() {
 
-    private val _items = MutableLiveData<List<TodoItem>>()
-    val items: LiveData<List<TodoItem>> get() = _items
 
-    private val _counter = MutableLiveData<Int>()
-    val counter: LiveData<Int> get() = _counter
+    private val _items = MutableStateFlow<List<TodoItem>>(emptyList())
+    val items = _items.asStateFlow()
 
-    fun getItems(filter: Boolean = false) {
-        val todoItems = todoItemsRepository.getItems()
+    private val _errorFlow = MutableStateFlow<String?>(null)
+    val errorFlow = _errorFlow.asStateFlow()
 
-        val filtered = if(filter)
-            todoItems.filter { !it.flagAchievement }
-        else todoItems
+    private val _counter = MutableStateFlow(0)
+    val counter = _counter.asStateFlow()
 
-        val countAchievement = todoItemsRepository.countChecked()
+    private val _isVisible = MutableStateFlow<Boolean>(false)
+    val isVisible = _isVisible.asStateFlow()
 
-        _items.value = filtered
-        _counter.value = countAchievement
+
+
+    init{
+        getItems(false)
     }
 
-    private fun updateCount() {
-        val countAchievement = todoItemsRepository.countChecked()
-        _counter.value = countAchievement
-    }
 
-    fun deleteItem(position: Int, filter: Boolean) {
-        todoItemsRepository.deleteItemByPosition(position)
-        getItems(filter)
-    }
 
     fun checkItem(item: TodoItem, checked: Boolean) {
-        todoItemsRepository.checkItem(item, checked)
-        updateCount()
+        runSafeInBackground {
+            todoItemsRepository.checkItem(item, checked)
+            updateCount()
+            getItems(_isVisible.value)
+        }
     }
 
-    companion object {
-        fun factory(todoItemsRepository: TodoItemsRepository): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    ItemListViewModel(
-                        todoItemsRepository
-                    )
-                }
-            }
+
+
+    fun changeVisible(value: Boolean){
+        _isVisible.value = !value
+        getItems(_isVisible.value)
     }
+
+
+
+    fun getItems(filter: Boolean = false) {
+        runSafeInBackground {
+            val todoItems = todoItemsRepository.getItems()
+
+            val filtered = if(filter)
+                todoItems.filter { !it.flagAchievement }
+            else todoItems
+
+            val countAchievement = todoItemsRepository.countChecked()
+
+            _items.value = filtered
+            _counter.value = countAchievement
+        }
+    }
+
+
+    private fun updateCount() {
+        runSafeInBackground {
+            val countAchievement = todoItemsRepository.countChecked()
+            _counter.value = countAchievement
+        }
+    }
+
+    private fun runSafeInBackground(block: suspend () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                block.invoke()
+            } catch (e: Exception) {
+                _errorFlow.value = e.message ?: "something went wrong"
+            }
+        }
+    }
+
 
 }

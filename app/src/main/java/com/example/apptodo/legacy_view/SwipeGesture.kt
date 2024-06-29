@@ -1,4 +1,4 @@
-package com.example.apptodo.design
+package com.example.apptodo.legacy_view
 
 import android.content.Context
 import android.graphics.Canvas

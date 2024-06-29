@@ -1,43 +1,74 @@
 package com.example.apptodo.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.viewModelScope
 import com.example.apptodo.data.TodoItem
 import com.example.apptodo.data.TodoItemsRepository
+import com.example.apptodo.utils.Relevance
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class RedactorViewModel(
     private val todoItemsRepository: TodoItemsRepository
 ) : ViewModel() {
 
-    private val _item = MutableLiveData<TodoItem>()
-    val item: LiveData<TodoItem> get() = _item
+    private val _item = MutableStateFlow<TodoItem?>(null)
+    val item: StateFlow<TodoItem?> = _item
 
+    private val _errorFlow = MutableStateFlow<String?>(null)
+    val errorFlow = _errorFlow.asStateFlow()
 
-    fun addItem(todoItem: TodoItem){
-        todoItemsRepository.addItem(todoItem)
+    fun setItem(item: TodoItem) {
+        _item.value = item
     }
 
-    fun getItemInformation(id: String) {
-        _item.value = todoItemsRepository.getItem(id)
+    fun clearItem() {
+        _item.value = null
     }
 
-    fun deleteItem(id: String) {
-        todoItemsRepository.deleteItemById(id)
+    fun updateText(newText: String) {
+        _item.value = _item.value?.copy(text = newText)
     }
 
-    companion object {
-        fun factory(todoItemsRepository: TodoItemsRepository): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    RedactorViewModel(
-                        todoItemsRepository
-                    )
-                }
+    fun updateRelevance(newRelevance: Relevance) {
+        _item.value = _item.value?.copy(relevance = newRelevance)
+    }
+
+    fun updateDeadline(newDeadline: String?) {
+        _item.value = _item.value?.copy(deadline = newDeadline)
+    }
+
+    fun deleteItem() {
+        runSafeInBackground {
+            _item.value?.let {
+                todoItemsRepository.deleteItemById(it.id)
+                clearItem()
             }
+        }
     }
 
+
+    fun saveItem(todoItem: TodoItem){
+        runSafeInBackground {
+            if (todoItemsRepository.getItem(todoItem.id) != null) {
+                todoItemsRepository.updateItem(todoItem)
+            } else {
+                todoItemsRepository.addItem(todoItem)
+            }
+            clearItem()
+        }
+    }
+
+    private fun runSafeInBackground(block: suspend () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                block.invoke()
+            } catch (e: Exception) {
+                _errorFlow.value = e.message ?: "something went wrong"
+            }
+        }
+    }
 }
