@@ -19,7 +19,7 @@ import com.example.apptodo.compose_ui.custom_components.Divider
 import com.example.apptodo.compose_ui.custom_components.PrimaryBodyText
 import com.example.apptodo.compose_ui.custom_components.Shadow
 import com.example.apptodo.compose_ui.ui.theme.ToDoAppTheme
-import com.example.apptodo.data.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.utils.Relevance
 import com.example.apptodo.utils.FakeTodoItem
 

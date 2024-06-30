@@ -1,6 +1,9 @@
-package com.example.apptodo.data
+package com.example.apptodo.data.repository
 
 import android.content.SharedPreferences
+import com.example.apptodo.data.dao.TodoDao
+import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.domain.ITodoItemsRepository
 import com.example.apptodo.utils.Relevance
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -9,13 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TodoItemsRepository(
-    private val sharedPreferences: SharedPreferences
-) {
+    private val todoDao: TodoDao
+) : ITodoItemsRepository{
 
-    private val gson = Gson()
-
-    private val ITEMS_LIST_KEY = "items_list_key"
-    private val INIT_KEY = "init"
 
     private val itemsList = mutableListOf<TodoItem>(
         TodoItem("10", "Купить что-то", Relevance.BASE, "2024-01-01", false, "01.01.2024", null),
@@ -89,82 +88,37 @@ class TodoItemsRepository(
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            if (!sharedPreferences.getBoolean(INIT_KEY, false)) {
-                saveList(itemsList)
-                sharedPreferences.edit().putBoolean(INIT_KEY, true).apply()
-            }
-        }
-
-    }
-
-
-
-
-    fun addItem(todoItem: TodoItem) {
-        val items = getItems()
-        val existItem = items.find { it.id == todoItem.id }
-        if (existItem == null) items.add(todoItem)
-        else {
-            val indexOfItem = items.indexOfFirst { it.id == todoItem.id }
-            items[indexOfItem] = todoItem
-        }
-        saveList(items)
-    }
-
-
-
-    fun saveList(data: List<TodoItem>) {
-        val json = gson.toJson(data)
-        sharedPreferences.edit().putString(ITEMS_LIST_KEY, json).apply()
-    }
-
-
-    fun deleteItemById(id: String) {
-        try {
-            val items = getItems()
-            items.removeIf { it.id == id }
-            saveList(items)
-        } catch (_: Exception) {
-
+            todoDao.saveList(itemsList)
         }
     }
 
-
-    fun getItems(): MutableList<TodoItem> {
-        val items = sharedPreferences.getString(ITEMS_LIST_KEY, "[]") ?: "[]"
-        return Gson().fromJson(items, object : TypeToken<List<TodoItem>>() {}.type)
+    override suspend fun addItem(todoItem: TodoItem) {
+        todoDao.addItem(todoItem)
     }
 
-
-    fun getItem(id: String): TodoItem? {
-        val items = getItems()
-        val item = items.find { id == it.id } ?: return null
-        return item
+    override suspend fun deleteItemById(id: String) {
+        todoDao.deleteItemById(id)
     }
 
-
-    fun checkItem(item: TodoItem, checked: Boolean) {
-        val items = getItems()
-        val editableItem = items.find { item.id == it.id } ?: return
-        editableItem.flagAchievement = checked
-        saveList(items)
+    override suspend fun getItems(): List<TodoItem> {
+        return todoDao.getItems()
     }
 
-
-    fun countChecked(): Int {
-        val items = getItems()
-        return items.count { it.flagAchievement }
+    override suspend fun getItem(id: String): TodoItem? {
+        return todoDao.getItem(id)
     }
 
-    fun updateItem(updatedItem: TodoItem) {
-        val items = getItems()
-        val index = items.indexOfFirst { it.id == updatedItem.id }
-        if (index != -1) {
-            items[index] = updatedItem
-            saveList(items)
-        }
+    override suspend fun checkItem(item: TodoItem, checked: Boolean) {
+        val id = item.id
+        todoDao.checkItem(id, checked)
     }
 
+    override suspend fun countChecked(): Int {
+        return todoDao.countChecked()
+    }
 
+    override suspend fun updateItem(updatedItem: TodoItem) {
+        todoDao.updateItem(updatedItem)
+    }
 
 }

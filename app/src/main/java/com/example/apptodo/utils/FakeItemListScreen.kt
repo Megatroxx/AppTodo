@@ -50,7 +50,7 @@ import androidx.navigation.NavController
 import com.example.apptodo.R
 import com.example.apptodo.compose_ui.custom_components.Shadow
 import com.example.apptodo.compose_ui.ui.theme.ToDoAppTheme
-import com.example.apptodo.data.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.navigation.DestinationEnum
 import java.time.format.DateTimeFormatter
 

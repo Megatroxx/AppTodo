@@ -2,7 +2,7 @@ package com.example.apptodo.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.apptodo.data.TodoItemsRepository
+import com.example.apptodo.data.repository.TodoItemsRepository
 
 class ItemListViewModelFactory(
     private val todoItemsRepository : TodoItemsRepository

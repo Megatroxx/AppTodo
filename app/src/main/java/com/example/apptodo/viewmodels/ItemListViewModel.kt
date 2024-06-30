@@ -2,8 +2,8 @@ package com.example.apptodo.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apptodo.data.TodoItem
-import com.example.apptodo.data.TodoItemsRepository
+import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.data.repository.TodoItemsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -83,6 +83,5 @@ class ItemListViewModel(
             }
         }
     }
-
 
 }

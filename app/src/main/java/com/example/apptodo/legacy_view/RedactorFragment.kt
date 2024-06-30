@@ -16,7 +16,7 @@ import androidx.fragment.app.viewModels
 import com.example.apptodo.app.App
 import com.example.apptodo.R
 import com.example.apptodo.utils.Relevance
-import com.example.apptodo.data.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.databinding.FragmentRedactorBinding
 import com.example.apptodo.viewmodels.RedactorViewModel
 import java.util.GregorianCalendar

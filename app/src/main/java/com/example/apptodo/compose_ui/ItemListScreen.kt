@@ -52,7 +52,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.apptodo.R
 import com.example.apptodo.compose_ui.custom_components.Shadow
 import com.example.apptodo.compose_ui.ui.theme.ToDoAppTheme
-import com.example.apptodo.data.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.navigation.DestinationEnum
 import com.example.apptodo.viewmodels.ItemListViewModel
 import com.example.apptodo.viewmodels.RedactorViewModel
