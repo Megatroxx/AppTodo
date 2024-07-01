@@ -1,4 +1,4 @@
-package com.example.apptodo.interfaces
+package com.example.apptodo.legacy_view
 
 import com.example.apptodo.data.TodoItem
 

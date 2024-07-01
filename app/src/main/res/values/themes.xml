@@ -10,7 +10,6 @@
     </style>
 
 
-
     <style name="done_style">
         <item name="android:textColor">@color/light_grey</item>
     </style>
@@ -43,7 +42,6 @@
     <style name="hint_color">
         <item name="android:textColorHint">@color/light_grey</item>
     </style>
-
 
 
     <style name="Theme.ToDoApp" parent="Base.Theme.AppTodo" />
@@ -88,7 +86,6 @@
         <item name="android:buttonBarNeutralButtonStyle">@style/DialogButtonStyled</item>
 
     </style>
-
 
 
     <style name="DialogButtonStyled" parent="Theme.MaterialComponents.Light">

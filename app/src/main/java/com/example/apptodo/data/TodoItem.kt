@@ -1,6 +1,6 @@
 package com.example.apptodo.data
 
-import com.example.apptodo.design.Relevance
+import com.example.apptodo.utils.Relevance
 
 data class TodoItem(
     val id: String,

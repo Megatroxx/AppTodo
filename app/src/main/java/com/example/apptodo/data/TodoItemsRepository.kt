@@ -1,9 +1,12 @@
 package com.example.apptodo.data
 
 import android.content.SharedPreferences
-import com.example.apptodo.design.Relevance
+import com.example.apptodo.utils.Relevance
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TodoItemsRepository(
     private val sharedPreferences: SharedPreferences
@@ -15,8 +18,8 @@ class TodoItemsRepository(
     private val INIT_KEY = "init"
 
     private val itemsList = mutableListOf<TodoItem>(
-        TodoItem("10", "Купить что-то", Relevance.BASE, "01/01/2024", false, "01.01.2024", null),
-        TodoItem("11", "Купить яблоки", Relevance.LOW, "01/01/2024", false, "01.02.2024", null),
+        TodoItem("10", "Купить что-то", Relevance.BASE, "2024-01-01", false, "01.01.2024", null),
+        TodoItem("11", "Купить яблоки", Relevance.LOW, "2024-01-01", false, "01.02.2024", null),
         TodoItem(
             "12",
             "Купить бананы и еще какой-нибудь очень длинный текст" + "потому что нужно протестировать как работает длинный текст",
@@ -39,9 +42,9 @@ class TodoItemsRepository(
                 "прибивает к острову бутылку. Открывают они ее, а там джинн. Джинн говорит:", Relevance.LOW, null, false, "09.07.2024", null),
         TodoItem(
             "15",
-            "Сходить в wildberries и забрать оттуда какую-то вещь",
+            "Сходить на почту и забрать оттуда какую-то вещь",
             Relevance.LOW,
-            "07/08/09",
+            "2024-11-22",
             false,
             "09.07.2024",
             null
@@ -51,7 +54,7 @@ class TodoItemsRepository(
         ),
         TodoItem(
             "17",
-            "89603762571 звони пиши",
+            "tg: @megatroxxs",
             Relevance.BASE,
             null,
             false,
@@ -63,7 +66,7 @@ class TodoItemsRepository(
             "19",
             "Фантазия заканчивается поэтому просто какой-то текст средней длины",
             Relevance.LOW,
-            "07/08/09",
+            "2024-05-19",
             false,
             "09.07.2024",
             null
@@ -73,7 +76,7 @@ class TodoItemsRepository(
         ),
         TodoItem(
             "21",
-            "Купить сову",
+            "Купить новый ком, а то этот уже не вывозит",
             Relevance.BASE,
             null,
             false,
@@ -83,12 +86,19 @@ class TodoItemsRepository(
 
         )
 
+
     init {
-        if (!sharedPreferences.getBoolean(INIT_KEY, false)) {
-            saveList(itemsList)
-            sharedPreferences.edit().putBoolean(INIT_KEY, true).apply()
+        CoroutineScope(Dispatchers.IO).launch {
+            if (!sharedPreferences.getBoolean(INIT_KEY, false)) {
+                saveList(itemsList)
+                sharedPreferences.edit().putBoolean(INIT_KEY, true).apply()
+            }
         }
+
     }
+
+
+
 
     fun addItem(todoItem: TodoItem) {
         val items = getItems()
@@ -101,20 +111,13 @@ class TodoItemsRepository(
         saveList(items)
     }
 
+
+
     fun saveList(data: List<TodoItem>) {
         val json = gson.toJson(data)
         sharedPreferences.edit().putString(ITEMS_LIST_KEY, json).apply()
     }
 
-    fun deleteItemByPosition(position: Int) {
-        try {
-            val items = getItems()
-            items.removeAt(position)
-            saveList(items)
-        } catch (_: Exception) {
-
-        }
-    }
 
     fun deleteItemById(id: String) {
         try {
@@ -126,18 +129,19 @@ class TodoItemsRepository(
         }
     }
 
+
     fun getItems(): MutableList<TodoItem> {
         val items = sharedPreferences.getString(ITEMS_LIST_KEY, "[]") ?: "[]"
         return Gson().fromJson(items, object : TypeToken<List<TodoItem>>() {}.type)
     }
 
-    fun getItem(id: String): TodoItem {
+
+    fun getItem(id: String): TodoItem? {
         val items = getItems()
-        val item = items.find { id == it.id } ?: return TodoItem(
-            id, "", Relevance.BASE, null, false, "", null
-        )
+        val item = items.find { id == it.id } ?: return null
         return item
     }
+
 
     fun checkItem(item: TodoItem, checked: Boolean) {
         val items = getItems()
@@ -146,10 +150,21 @@ class TodoItemsRepository(
         saveList(items)
     }
 
+
     fun countChecked(): Int {
         val items = getItems()
         return items.count { it.flagAchievement }
     }
+
+    fun updateItem(updatedItem: TodoItem) {
+        val items = getItems()
+        val index = items.indexOfFirst { it.id == updatedItem.id }
+        if (index != -1) {
+            items[index] = updatedItem
+            saveList(items)
+        }
+    }
+
 
 
 }

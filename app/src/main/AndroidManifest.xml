@@ -14,13 +14,20 @@
         android:theme="@style/Base.Theme.AppTodo"
         tools:targetApi="31">
         <activity
-            android:name=".app.MainActivity"
-            android:exported="true">
+            android:name=".app.MainActivityCompose"
+            android:exported="true"
+            android:label="@string/title_activity_main_compose"
+            android:theme="@style/Base.Theme.AppTodo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".app.MainActivity"
+            android:exported="true">
         </activity>
     </application>
 
