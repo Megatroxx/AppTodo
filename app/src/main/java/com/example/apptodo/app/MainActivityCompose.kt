@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.apptodo.compose_ui.ui.theme.ToDoAppTheme
-import com.example.apptodo.navigation.AppScreen
-import com.example.apptodo.viewmodels.ItemListViewModel
-import com.example.apptodo.viewmodels.RedactorViewModel
+import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
+import com.example.apptodo.presentation.navigation.AppScreen
+import com.example.apptodo.presentation.viewmodels.ItemListViewModel
+import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 
 class MainActivityCompose : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

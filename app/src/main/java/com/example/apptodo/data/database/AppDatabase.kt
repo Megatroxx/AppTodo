@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.apptodo.data.dao.TodoDao
-import com.example.apptodo.data.entity.RelevanceConverter
-import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.domain.entity.RelevanceConverter
+import com.example.apptodo.domain.entity.TodoItem
 
 @Database(entities = [TodoItem::class], version = 1)
 @TypeConverters(RelevanceConverter::class)

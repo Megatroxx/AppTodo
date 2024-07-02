@@ -1,12 +1,9 @@
 package com.example.apptodo.data.repository
 
-import android.content.SharedPreferences
 import com.example.apptodo.data.dao.TodoDao
-import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.domain.entity.TodoItem
 import com.example.apptodo.domain.ITodoItemsRepository
-import com.example.apptodo.utils.Relevance
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.apptodo.domain.entity.Relevance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

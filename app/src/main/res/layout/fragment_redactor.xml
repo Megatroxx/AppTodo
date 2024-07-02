@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".legacy_view.RedactorFragment"
+    tools:context=".view_legacy.RedactorFragment"
     android:orientation="vertical"
     style="@style/screen_style">
     <!--    android:background="@color/back_light_primary">-->

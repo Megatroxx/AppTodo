@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import com.example.apptodo.data.database.AppDatabase
 import com.example.apptodo.data.repository.TodoItemsRepository
-import com.example.apptodo.viewmodels.ItemListViewModelFactory
-import com.example.apptodo.viewmodels.RedactorViewModelFactory
+import com.example.apptodo.presentation.viewmodels.ItemListViewModelFactory
+import com.example.apptodo.presentation.viewmodels.RedactorViewModelFactory
 
 class App : Application() {
 
