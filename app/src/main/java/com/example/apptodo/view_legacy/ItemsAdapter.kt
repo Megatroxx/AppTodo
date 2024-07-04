@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apptodo.R
-import com.example.apptodo.domain.entity.TodoItem
-import com.example.apptodo.domain.entity.Relevance
+import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.databinding.TodoItemBinding
 
 class ItemsAdapter(

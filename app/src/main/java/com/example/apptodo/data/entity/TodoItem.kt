@@ -1,4 +1,4 @@
-package com.example.apptodo.domain.entity
+package com.example.apptodo.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,5 +14,5 @@ data class TodoItem(
     val deadline: String? = null,
     var flagAchievement: Boolean,
     val creationDate: String,
-    val changeDate: String? = null,
+    val changeDate: String = creationDate,
 )

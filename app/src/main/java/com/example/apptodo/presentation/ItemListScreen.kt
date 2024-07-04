@@ -52,11 +52,11 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.apptodo.R
 import com.example.apptodo.presentation.custom_components.Shadow
 import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
-import com.example.apptodo.domain.entity.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.presentation.navigation.DestinationEnum
 import com.example.apptodo.presentation.viewmodels.ItemListViewModel
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
-import com.example.apptodo.domain.entity.Relevance
+import com.example.apptodo.data.entity.Relevance
 import kotlinx.coroutines.flow.merge
 import java.time.format.DateTimeFormatter
 

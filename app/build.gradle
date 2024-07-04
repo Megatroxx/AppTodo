@@ -84,11 +84,14 @@ dependencies {
     implementation libs.converter.gson
     implementation libs.datetime
     implementation libs.recyclerviewswipedecorator
+    implementation libs.okhttp
+    implementation libs.logging.interceptor
 
 // Room Database
     implementation libs.androidx.room.common
     implementation libs.androidx.room.ktx
     kapt "androidx.room:room-compiler:2.6.1"
+    implementation libs.converter.scalars
 
 // Testing dependencies
     testImplementation libs.junit

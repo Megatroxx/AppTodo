@@ -1,6 +1,6 @@
 package com.example.apptodo.domain
 
-import com.example.apptodo.domain.entity.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 
 interface ITodoItemsRepository {
 

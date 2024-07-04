@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.apptodo.domain.entity.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 
 @Dao
 interface TodoDao {

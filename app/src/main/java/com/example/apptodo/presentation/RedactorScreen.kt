@@ -50,14 +50,14 @@ import com.example.apptodo.R
 import com.example.apptodo.presentation.custom_components.Divider
 import com.example.apptodo.presentation.custom_components.PrimaryBodyText
 import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
-import com.example.apptodo.domain.entity.Relevance
+import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.presentation.navigation.DestinationEnum
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.example.apptodo.domain.entity.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -138,10 +138,8 @@ fun RedactorScreen(
                                             relevance = relevance,
                                             deadline = deadline,
                                             flagAchievement = false,
-                                            LocalDate
-                                                .now()
-                                                .toString(),
-                                            null
+                                            creationDate = LocalDate.now().toString(),
+                                            changeDate = LocalDate.now().toString()
                                         )
 
                                         redactorViewModel.setItem(newTodoItem)

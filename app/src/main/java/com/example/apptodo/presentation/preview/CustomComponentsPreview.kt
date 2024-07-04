@@ -22,9 +22,9 @@ import com.example.apptodo.presentation.custom_components.PrimaryBodyText
 import com.example.apptodo.presentation.custom_components.Shadow
 import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
 import com.example.apptodo.data.database.AppDatabase
-import com.example.apptodo.domain.entity.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.data.repository.TodoItemsRepository
-import com.example.apptodo.domain.entity.Relevance
+import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.presentation.viewmodels.ItemListViewModel
 import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
 
@@ -40,7 +40,7 @@ fun PreviewTodoItem() {
         "2024-01-01",
         false,
         "2023-12-11",
-        null
+        "2023-12-11"
     )
 
     val itemListViewModel = ItemListViewModel(
@@ -66,7 +66,7 @@ fun DarkPreviewTodoItem() {
         "2024-01-01",
         true,
         "2023-12-11",
-        null
+        "2023-12-11"
     )
 
     val itemListViewModel = ItemListViewModel(

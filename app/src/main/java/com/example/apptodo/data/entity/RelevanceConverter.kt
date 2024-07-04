@@ -1,4 +1,4 @@
-package com.example.apptodo.domain.entity
+package com.example.apptodo.data.entity
 
 import androidx.room.TypeConverter
 

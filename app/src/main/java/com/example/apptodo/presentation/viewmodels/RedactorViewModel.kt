@@ -2,9 +2,9 @@ package com.example.apptodo.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apptodo.domain.entity.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.domain.ITodoItemsRepository
-import com.example.apptodo.domain.entity.Relevance
+import com.example.apptodo.data.entity.Relevance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,7 +51,14 @@ class RedactorViewModel(
     }
 
 
-    fun saveItem(todoItem: TodoItem){
+    fun saveItem(todoItem: TodoItem) {
+        runSafeInBackground {
+            todoItemsRepository.updateItem(todoItem)
+            clearItem()
+        }
+    }
+
+/*    fun saveItem(todoItem: TodoItem){
         runSafeInBackground {
             if (todoItemsRepository.getItem(todoItem.id) != null) {
                 todoItemsRepository.updateItem(todoItem)
@@ -60,7 +67,7 @@ class RedactorViewModel(
             }
             clearItem()
         }
-    }
+    }*/
 
     private fun runSafeInBackground(block: suspend () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {

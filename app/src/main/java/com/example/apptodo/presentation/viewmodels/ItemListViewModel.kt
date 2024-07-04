@@ -2,7 +2,7 @@ package com.example.apptodo.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apptodo.domain.entity.TodoItem
+import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.data.repository.TodoItemsRepository
 import com.example.apptodo.domain.ITodoItemsRepository
 import kotlinx.coroutines.Dispatchers
