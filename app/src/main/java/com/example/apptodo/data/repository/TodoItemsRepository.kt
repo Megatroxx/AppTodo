@@ -8,6 +8,7 @@ import com.example.apptodo.data.network.TodoBackend
 import com.example.apptodo.data.network.exception.NetworkException
 import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
 import com.example.apptodo.data.network.model.GenericToDoResponse
+import com.example.apptodo.data.network.model.UpdateSingleToDoRequest
 import com.example.apptodo.data.network.utils.NetworkChecker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,12 +23,30 @@ class TodoItemsRepository(
     private val lastKnownRevisionRepository: LastKnownRevisionRepository
 ) : ITodoItemsRepository{
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
+    init{
+        coroutineScope.launch {
+            initializeData()
+        }
+    }
+
 
     override suspend fun addItem(todoItem: TodoItem) {
+        if (networkChecker.isNetworkAvailable()){
+            handle {
+                todoBackend.addToDoItem(
+                    UpdateSingleToDoRequest(cloudTodoItemToEntityMapper.mapFrom(todoItem))
+                )
+            }
+        }
         todoDao.addItem(todoItem)
     }
 
     override suspend fun deleteItemById(id: String) {
+        if (networkChecker.isNetworkAvailable()){
+            handle { todoBackend.deleteItemById(id) }
+        }
         todoDao.deleteItemById(id)
     }
 
@@ -35,14 +54,32 @@ class TodoItemsRepository(
         return todoDao.getItems()
     }
 
+    private suspend fun getItemsByNetwork(): List<TodoItem> {
+        return handle {
+            todoBackend.getToDoList()
+        }.list.map { cloudTodoItemToEntityMapper.mapTo(it) }
+    }
 
     override suspend fun getItem(id: String): TodoItem? {
         return todoDao.getItem(id)
     }
 
     override suspend fun checkItem(item: TodoItem, checked: Boolean) {
-        val id = item.id
-        todoDao.checkItem(id, checked)
+        if (networkChecker.isNetworkAvailable()){
+            handle {
+                todoBackend.updateToDoItem(
+                    item.id,
+                    UpdateSingleToDoRequest(
+                        cloudTodoItemToEntityMapper.mapFrom(
+                            item.copy(
+                                flagAchievement = checked
+                            )
+                        )
+                    )
+                )
+            }
+        }
+        todoDao.checkItem(item.id, checked)
     }
 
     override suspend fun countChecked(): Int {
@@ -50,7 +87,22 @@ class TodoItemsRepository(
     }
 
     override suspend fun updateItem(updatedItem: TodoItem) {
+        if (networkChecker.isNetworkAvailable()){
+            handle {
+                todoBackend.updateToDoItem(
+                    updatedItem.id,
+                    UpdateSingleToDoRequest(cloudTodoItemToEntityMapper.mapFrom(updatedItem))
+                )
+            }
+        }
         todoDao.updateItem(updatedItem)
+    }
+
+    suspend fun initializeData() {
+        if (networkChecker.isNetworkAvailable()) {
+            val remoteItems = getItemsByNetwork()
+            todoDao.saveList(remoteItems)
+        }
     }
 
     private suspend fun <T : GenericToDoResponse> handle(block: suspend () -> Response<T>): T {

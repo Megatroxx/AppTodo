@@ -9,7 +9,7 @@ import com.example.apptodo.data.dao.TodoDao
 import com.example.apptodo.data.entity.RelevanceConverter
 import com.example.apptodo.data.entity.TodoItem
 
-@Database(entities = [TodoItem::class], version = 1)
+@Database(entities = [TodoItem::class], version = 2)
 @TypeConverters(RelevanceConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao
@@ -28,7 +28,8 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "todo_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 return instance
             }

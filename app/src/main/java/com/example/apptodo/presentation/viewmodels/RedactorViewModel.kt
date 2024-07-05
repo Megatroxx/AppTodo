@@ -53,21 +53,15 @@ class RedactorViewModel(
 
     fun saveItem(todoItem: TodoItem) {
         runSafeInBackground {
-            todoItemsRepository.updateItem(todoItem)
+            val item = todoItemsRepository.getItem(todoItem.id)
+            if (item != null){
+                todoItemsRepository.updateItem(todoItem)
+            }
+            else
+                todoItemsRepository.addItem(todoItem)
             clearItem()
         }
     }
-
-/*    fun saveItem(todoItem: TodoItem){
-        runSafeInBackground {
-            if (todoItemsRepository.getItem(todoItem.id) != null) {
-                todoItemsRepository.updateItem(todoItem)
-            } else {
-                todoItemsRepository.addItem(todoItem)
-            }
-            clearItem()
-        }
-    }*/
 
     private fun runSafeInBackground(block: suspend () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {

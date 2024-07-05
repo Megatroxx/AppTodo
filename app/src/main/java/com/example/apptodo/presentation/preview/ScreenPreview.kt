@@ -17,7 +17,7 @@ import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 @Preview(showBackground = true)
 @Composable
 private fun PreviewItemListScreen() {
-    val navController = rememberNavController()
+/*    val navController = rememberNavController()
     val itemListViewModel = ItemListViewModel(TodoItemsRepository(AppDatabase.getDatabase(
         LocalContext.current).todoDao()))
     val redactorViewModel = RedactorViewModel(TodoItemsRepository(AppDatabase.getDatabase(
@@ -31,13 +31,13 @@ private fun PreviewItemListScreen() {
             itemListViewModel = itemListViewModel,
             redactorViewModel = redactorViewModel
         )
-    }
+    }*/
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewDarkItemListScreen() {
-    val navController = rememberNavController()
+/*    val navController = rememberNavController()
     val itemListViewModel = ItemListViewModel(TodoItemsRepository(AppDatabase.getDatabase(
         LocalContext.current).todoDao()))
     val redactorViewModel = RedactorViewModel(TodoItemsRepository(AppDatabase.getDatabase(
@@ -50,31 +50,31 @@ private fun PreviewDarkItemListScreen() {
             itemListViewModel = itemListViewModel,
             redactorViewModel = redactorViewModel
         )
-    }
+    }*/
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewRedactorScreen() {
-    val navController = rememberNavController()
+/*    val navController = rememberNavController()
     val redactorViewModel = RedactorViewModel(TodoItemsRepository(AppDatabase.getDatabase(
         LocalContext.current).todoDao()))
 
 
     ToDoAppTheme {
         RedactorScreen(navController = navController, redactorViewModel = redactorViewModel)
-    }
+    }*/
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewDarkRedactorScreen() {
-    val navController = rememberNavController()
+/*    val navController = rememberNavController()
     val redactorViewModel = RedactorViewModel(TodoItemsRepository(AppDatabase.getDatabase(
         LocalContext.current).todoDao()))
 
 
     ToDoAppTheme {
         RedactorScreen(navController = navController, redactorViewModel = redactorViewModel)
-    }
+    }*/
 }

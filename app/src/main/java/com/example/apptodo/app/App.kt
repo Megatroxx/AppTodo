@@ -7,6 +7,7 @@ import com.example.apptodo.data.network.interceptors.AuthInterceptor
 import com.example.apptodo.data.network.interceptors.LastKnownRevisionInterceptor
 import com.example.apptodo.data.network.TodoBackend
 import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
+import com.example.apptodo.data.network.utils.NetworkChecker
 import com.example.apptodo.data.repository.DeviceNameRepository
 import com.example.apptodo.data.repository.LastKnownRevisionRepository
 import com.example.apptodo.data.repository.TodoItemsNetworkRepository
@@ -32,6 +33,7 @@ class App : Application() {
     private lateinit var deviceNameRepository: DeviceNameRepository
     private val cloudTodoItemToEntityMapper by lazy { CloudTodoItemToEntityMapper(deviceNameRepository) }
     private val lastKnownRevisionRepository = LastKnownRevisionRepository()
+    private lateinit var networkChecker: NetworkChecker
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(TodoBackend.BASE_URL)
@@ -53,8 +55,10 @@ class App : Application() {
 
         roomDataBase = AppDatabase.getDatabase(this)
         deviceNameRepository = DeviceNameRepository(contentResolver)
-        todoItemsRepository = TodoItemsNetworkRepository(
+        todoItemsRepository = TodoItemsRepository(
+            roomDataBase.todoDao(),
             retrofit.create(TodoBackend::class.java),
+            NetworkChecker(applicationContext),
             cloudTodoItemToEntityMapper,
             lastKnownRevisionRepository
         )

@@ -33,7 +33,7 @@ import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
 @Composable
 fun PreviewTodoItem() {
 
-    val todoItem = TodoItem(
+/*    val todoItem = TodoItem(
         "10",
         "Купить что-то",
         Relevance.URGENT,
@@ -52,14 +52,14 @@ fun PreviewTodoItem() {
     ToDoAppTheme {
         TodoItem(todoItem = todoItem, itemListViewModel = itemListViewModel) {
         }
-    }
+    }*/
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DarkPreviewTodoItem() {
 
-    val todoItem = TodoItem(
+/*    val todoItem = TodoItem(
         "10",
         "Купить что-то",
         Relevance.URGENT,
@@ -78,7 +78,7 @@ fun DarkPreviewTodoItem() {
     ToDoAppTheme {
         TodoItem(todoItem = todoItem, itemListViewModel = itemListViewModel) {
         }
-    }
+    }*/
 }
 
 
