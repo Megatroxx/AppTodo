@@ -1,10 +1,15 @@
 package com.example.apptodo.data.network.interceptors
 
 import com.example.apptodo.data.repository.LastKnownRevisionRepository
-import com.example.apptodo.data.repository.TodoItemsNetworkRepository
-import com.example.apptodo.domain.ITodoItemsRepository
 import okhttp3.Interceptor
 import okhttp3.Response
+
+
+/**
+ * Interceptor for adding X-Last-Known-Revision header to outgoing requests.
+ *
+ * @property lastKnownRevisionRepository Repository for accessing the last known revision.
+ */
 
 class LastKnownRevisionInterceptor(
     private val lastKnownRevisionRepository: LastKnownRevisionRepository

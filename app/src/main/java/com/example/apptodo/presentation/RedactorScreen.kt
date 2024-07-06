@@ -1,6 +1,5 @@
 package com.example.apptodo.presentation
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,16 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,39 +41,43 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.apptodo.R
+import com.example.apptodo.data.entity.Relevance
+import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.presentation.custom_components.BasicAlertDialogCompose
 import com.example.apptodo.presentation.custom_components.Divider
 import com.example.apptodo.presentation.custom_components.PrimaryBodyText
-import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
-import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.presentation.navigation.DestinationEnum
+import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
+import com.example.apptodo.presentation.ui_state.UIState
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.example.apptodo.data.entity.TodoItem
-import com.example.apptodo.presentation.ui_state.UIState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.UUID
 
+
+/**
+ * Composable function representing the screen for editing or adding a new todo item.
+ *
+ * @param navController NavController for navigating between screens.
+ * @param redactorViewModel ViewModel for managing item editing and saving.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RedactorScreen(
     navController: NavController,
     redactorViewModel: RedactorViewModel
 ) {
-
-    val context = LocalContext.current
-
 
     val currentItem by redactorViewModel.item.collectAsState()
 
@@ -91,27 +90,7 @@ fun RedactorScreen(
 
     val showLoadingDialog = remember { mutableStateOf(false) }
 
-    if (showLoadingDialog.value) {
-        BasicAlertDialog(
-            onDismissRequest = {},
-            content = {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-                        .padding(16.dp)
-                ) {
-                    Text(text = "Loading", style = MaterialTheme.typography.titleLarge)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(text = "Please wait...", style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
-            }
-        )
-    }
+    BasicAlertDialogCompose(isLoading = showLoadingDialog.value)
 
     LaunchedEffect(uiState) {
         when (uiState) {
@@ -126,8 +105,6 @@ fun RedactorScreen(
             else -> {}
         }
     }
-
-
 
     val scrollState = rememberScrollState()
     ToDoAppTheme {

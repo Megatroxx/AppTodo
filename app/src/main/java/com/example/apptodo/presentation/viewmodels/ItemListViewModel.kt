@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.data.network.utils.NetworkChecker
-import com.example.apptodo.data.repository.TodoItemsRepository
 import com.example.apptodo.domain.ITodoItemsRepository
 import com.example.apptodo.presentation.ui_state.UIState
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +11,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+
+/**
+ * ViewModel for managing the state and operations related to the list of todo items.
+ *
+ * @property todoItemsRepository Repository interface for accessing and managing todo items data.
+ * @property networkChecker Utility class for checking network connectivity.
+ */
 
 class ItemListViewModel(
     private val todoItemsRepository: ITodoItemsRepository,
@@ -35,8 +42,7 @@ class ItemListViewModel(
     val isNetworkAvailable: StateFlow<Boolean> get() = _isNetworkAvailable
 
 
-
-    init{
+    init {
         getItems(false)
         observeNetworkChanges()
     }
@@ -53,7 +59,6 @@ class ItemListViewModel(
     }
 
 
-
     fun checkItem(item: TodoItem, checked: Boolean) {
         runSafeInBackground {
             todoItemsRepository.checkItem(item, checked)
@@ -63,8 +68,7 @@ class ItemListViewModel(
     }
 
 
-
-    fun changeVisible(value: Boolean){
+    fun changeVisible(value: Boolean) {
         _isVisible.value = !value
         getItems(_isVisible.value)
     }

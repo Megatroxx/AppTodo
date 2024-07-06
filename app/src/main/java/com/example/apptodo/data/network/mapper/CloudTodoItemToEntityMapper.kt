@@ -5,18 +5,21 @@ import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.data.repository.DeviceNameRepository
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
+
+
+/**
+ * Mapper class for converting between `CloudToDoItem` and `TodoItem`.
+ *
+ * @property deviceNameRepository Repository for retrieving the device name.
+ */
 
 class CloudTodoItemToEntityMapper(private val deviceNameRepository: DeviceNameRepository) {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-    fun mapTo(cloudModel: CloudToDoItem): TodoItem {
+    internal fun mapTo(cloudModel: CloudToDoItem): TodoItem {
         return TodoItem(
             id = cloudModel.id,
             text = cloudModel.text,
@@ -28,7 +31,7 @@ class CloudTodoItemToEntityMapper(private val deviceNameRepository: DeviceNameRe
         )
     }
 
-    fun mapFrom(todoItem: TodoItem): CloudToDoItem {
+    internal fun mapFrom(todoItem: TodoItem): CloudToDoItem {
         return CloudToDoItem(
             id = todoItem.id,
             text = todoItem.text,
@@ -43,8 +46,8 @@ class CloudTodoItemToEntityMapper(private val deviceNameRepository: DeviceNameRe
         )
     }
 
-    private fun importanceToRelevance(importance: String): Relevance{
-        return when (importance){
+    private fun importanceToRelevance(importance: String): Relevance {
+        return when (importance) {
             "low" -> Relevance.LOW
             "basic" -> Relevance.BASE
             "important" -> Relevance.URGENT
@@ -52,8 +55,8 @@ class CloudTodoItemToEntityMapper(private val deviceNameRepository: DeviceNameRe
         }
     }
 
-    private fun relevanceToImportance(relevance: Relevance): String{
-        return when(relevance){
+    private fun relevanceToImportance(relevance: Relevance): String {
+        return when (relevance) {
             Relevance.LOW -> "low"
             Relevance.BASE -> "basic"
             Relevance.URGENT -> "important"
@@ -61,7 +64,7 @@ class CloudTodoItemToEntityMapper(private val deviceNameRepository: DeviceNameRe
     }
 
     private fun dateToUnixTimestamp(dateString: String): Long {
-        val date =  dateFormat.parse(dateString)
+        val date = dateFormat.parse(dateString)
         return date.time
     }
 

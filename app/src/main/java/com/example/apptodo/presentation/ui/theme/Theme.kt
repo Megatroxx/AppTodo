@@ -15,6 +15,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+
+/**
+ * Composable function that provides themed styling for the entire application.
+ *
+ * @param darkTheme Whether the theme should be dark (true) or light (false).
+ * @param dynamicColor Whether to use dynamic system colors when available (requires API level 31).
+ * @param content The composable content to be themed.
+ */
+
+
 private val DarkColorScheme = darkColorScheme(
     primary = ThemeColors.Night.supportSeparator,
     secondary = ThemeColors.Night.supportOverlay,
@@ -30,7 +40,7 @@ private val DarkColorScheme = darkColorScheme(
 
 
     onPrimary = ThemeColors.Night.labelPrimary,
-    onSecondary = ThemeColors.Night.labelSecondary ,
+    onSecondary = ThemeColors.Night.labelSecondary,
     onTertiary = ThemeColors.Night.labelTertiary,
     onSurfaceVariant = ThemeColors.Night.labelDisable,
 )
@@ -49,7 +59,7 @@ private val LightColorScheme = lightColorScheme(
     surfaceTint = ThemeColors.Day.backElevated,
 
     onPrimary = ThemeColors.Day.labelPrimary,
-    onSecondary = ThemeColors.Day.labelSecondary ,
+    onSecondary = ThemeColors.Day.labelSecondary,
     onTertiary = ThemeColors.Day.labelTertiary,
     onSurfaceVariant = ThemeColors.Day.labelDisable,
 )

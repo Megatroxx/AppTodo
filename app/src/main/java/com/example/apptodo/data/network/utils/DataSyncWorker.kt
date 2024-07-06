@@ -1,4 +1,4 @@
-package com.example.apptodo.domain
+package com.example.apptodo.data.network.utils
 
 import android.content.Context
 import androidx.work.Constraints
@@ -10,6 +10,11 @@ import androidx.work.WorkerParameters
 import com.example.apptodo.app.App
 import com.example.apptodo.data.repository.TodoItemsRepository
 import java.util.concurrent.TimeUnit
+
+/**
+ * A Worker class responsible for periodic synchronization of data between
+ * a local database and a remote server.
+ **/
 
 class DataSyncWorker(
     context: Context,

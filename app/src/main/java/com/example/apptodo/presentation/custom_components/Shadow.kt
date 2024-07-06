@@ -10,6 +10,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+
+/**
+ * Modifier extension function that adds a shadow effect to a composable element.
+ **/
+
+
 fun Modifier.Shadow(
     color: Color = Color(0xFFD1D1D6),
     borderRadius: Dp = 0.dp,

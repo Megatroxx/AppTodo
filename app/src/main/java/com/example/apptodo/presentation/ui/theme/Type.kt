@@ -6,6 +6,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+
+/**
+ * Defines typography styles used throughout the application.
+ */
+
 val Typography = Typography(
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

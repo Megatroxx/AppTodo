@@ -9,7 +9,18 @@ import com.example.apptodo.data.dao.TodoDao
 import com.example.apptodo.data.entity.RelevanceConverter
 import com.example.apptodo.data.entity.TodoItem
 
-@Database(entities = [TodoItem::class], version = 2)
+
+/**
+ * Database class for managing TodoItem entities.
+ *
+ * This RoomDatabase implementation provides access to the DAO (Data Access Object) for TodoItem entities.
+ * It includes a companion object to create or retrieve the database instance using Room's databaseBuilder.
+ *
+ * @property todoDao Access object for managing TodoItem entities.
+ */
+
+
+@Database(entities = [TodoItem::class], version = 1, exportSchema = false)
 @TypeConverters(RelevanceConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao

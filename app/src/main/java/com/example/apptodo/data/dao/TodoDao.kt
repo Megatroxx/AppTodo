@@ -8,6 +8,13 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.apptodo.data.entity.TodoItem
 
+
+/**
+ * Data Access Object (DAO) for managing TodoItem entities in the Room database.
+ * Defines methods for performing CRUD operations and querying TodoItem data.
+ */
+
+
 @Dao
 interface TodoDao {
 

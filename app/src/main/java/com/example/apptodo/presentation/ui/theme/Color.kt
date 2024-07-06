@@ -2,6 +2,11 @@ package com.example.apptodo.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+
+/**
+ * Sealed class defining themed color sets for different application themes.
+ **/
+
 sealed class ThemeColors(
     val supportSeparator: Color,
     val supportOverlay: Color,

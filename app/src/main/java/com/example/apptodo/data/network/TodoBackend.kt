@@ -1,6 +1,5 @@
 package com.example.apptodo.data.network
 
-import com.example.apptodo.data.network.model.CloudToDoItem
 import com.example.apptodo.data.network.model.GetSingleToDoResponse
 import com.example.apptodo.data.network.model.GetToDoListResponse
 import com.example.apptodo.data.network.model.UpdateSingleToDoRequest
@@ -15,18 +14,19 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
+
+/**
+ * Interface defining API endpoints for interacting with a Todo backend service.
+ */
+
 interface TodoBackend {
 
     @GET("list")
     suspend fun getToDoList(): Response<GetToDoListResponse>
 
     @PATCH("list")
-//    @Headers("X-Last-Known-Revision: ")
     @Headers("Authorization: Bearer")
     suspend fun updateToDoList(@Body request: UpdateToDoListRequest): Response<GetToDoListResponse>
-
-    @GET("list/{id}")
-    suspend fun getToDoItemById(@Path("id") id: String): Response<GetSingleToDoResponse>
 
     @POST("list")
     suspend fun addToDoItem(@Body request: UpdateSingleToDoRequest): Response<GetSingleToDoResponse>

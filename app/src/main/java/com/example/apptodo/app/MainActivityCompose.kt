@@ -16,6 +16,14 @@ import com.example.apptodo.presentation.navigation.AppScreen
 import com.example.apptodo.presentation.viewmodels.ItemListViewModel
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 
+
+/**
+ * MainActivityCompose serves as the entry point for the application using Jetpack Compose.
+ * It initializes key components such as ViewModels for the task list and editor,
+ * and configures the interface using Jetpack Compose components.
+ */
+
+
 class MainActivityCompose : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

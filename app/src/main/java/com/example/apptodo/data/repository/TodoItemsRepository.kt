@@ -1,9 +1,9 @@
 package com.example.apptodo.data.repository
 
+import android.util.Log
 import com.example.apptodo.data.dao.TodoDao
 import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.domain.ITodoItemsRepository
-import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.data.network.TodoBackend
 import com.example.apptodo.data.network.exception.NetworkException
 import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
@@ -16,25 +16,44 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
+
+/**
+ * Repository class for managing TodoItem data, facilitating interaction
+ * between the local database and remote server.
+ *
+ * @property todoDao DAO for accessing the local TodoItem database.
+ * @property todoBackend API client for interacting with the remote server.
+ * @property networkChecker Class for checking network availability.
+ * @property cloudTodoItemToEntityMapper Mapper for transforming data between cloud and local TodoItem formats.
+ * @property lastKnownRevisionRepository Repository for managing the last known data revision.
+ */
+
+
 class TodoItemsRepository(
     private val todoDao: TodoDao,
     private val todoBackend: TodoBackend,
     private val networkChecker: NetworkChecker,
     private val cloudTodoItemToEntityMapper: CloudTodoItemToEntityMapper,
     private val lastKnownRevisionRepository: LastKnownRevisionRepository
-) : ITodoItemsRepository{
+) : ITodoItemsRepository {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    init{
+    init {
         coroutineScope.launch {
-            initializeData()
+            try {
+                initializeData()
+            } catch (e: NetworkException) {
+                Log.d("AAA", "aaa")
+            } catch (e: Exception) {
+                Log.d("AAA", e.message.toString())
+            }
         }
     }
 
 
     override suspend fun addItem(todoItem: TodoItem) {
-        if (networkChecker.isNetworkAvailable()){
+        if (networkChecker.isNetworkAvailable()) {
             handle {
                 todoBackend.addToDoItem(
                     UpdateSingleToDoRequest(cloudTodoItemToEntityMapper.mapFrom(todoItem))
@@ -45,7 +64,7 @@ class TodoItemsRepository(
     }
 
     override suspend fun deleteItemById(id: String) {
-        if (networkChecker.isNetworkAvailable()){
+        if (networkChecker.isNetworkAvailable()) {
             handle { todoBackend.deleteItemById(id) }
         }
         todoDao.deleteItemById(id)
@@ -66,7 +85,7 @@ class TodoItemsRepository(
     }
 
     override suspend fun checkItem(item: TodoItem, checked: Boolean) {
-        if (networkChecker.isNetworkAvailable()){
+        if (networkChecker.isNetworkAvailable()) {
             handle {
                 todoBackend.updateToDoItem(
                     item.id,
@@ -88,7 +107,7 @@ class TodoItemsRepository(
     }
 
     override suspend fun updateItem(updatedItem: TodoItem) {
-        if (networkChecker.isNetworkAvailable()){
+        if (networkChecker.isNetworkAvailable()) {
             handle {
                 todoBackend.updateToDoItem(
                     updatedItem.id,
@@ -99,7 +118,7 @@ class TodoItemsRepository(
         todoDao.updateItem(updatedItem)
     }
 
-    suspend fun initializeData() {
+    private suspend fun initializeData() {
         if (networkChecker.isNetworkAvailable()) {
             val remoteItems = getItemsByNetwork()
             todoDao.saveList(remoteItems)
@@ -148,8 +167,6 @@ class TodoItemsRepository(
             }
         }
     }
-
-
 
 
     private suspend fun <T : GenericToDoResponse> handle(block: suspend () -> Response<T>): T {

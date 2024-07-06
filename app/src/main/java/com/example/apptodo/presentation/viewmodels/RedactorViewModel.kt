@@ -2,15 +2,23 @@ package com.example.apptodo.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.domain.ITodoItemsRepository
-import com.example.apptodo.data.entity.Relevance
 import com.example.apptodo.presentation.ui_state.UIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+
+/**
+ * ViewModel for handling interactions and data logic related to editing or creating todo items.
+ *
+ * @property todoItemsRepository Repository interface for accessing and managing todo items data.
+ */
+
 
 class RedactorViewModel(
     private val todoItemsRepository: ITodoItemsRepository
@@ -61,10 +69,9 @@ class RedactorViewModel(
         runSafeInBackground {
             _uiState.value = UIState.Loading
             val item = todoItemsRepository.getItem(todoItem.id)
-            if (item != null){
+            if (item != null) {
                 todoItemsRepository.updateItem(todoItem)
-            }
-            else
+            } else
                 todoItemsRepository.addItem(todoItem)
             clearItem()
             _uiState.value = UIState.Success
