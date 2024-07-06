@@ -120,10 +120,6 @@ fun ItemListScreen(
         }
     }
 
-    LaunchedEffect(todoList) {
-        itemListViewModel.getItems()
-    }
-
     ToDoAppTheme {
 
         Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

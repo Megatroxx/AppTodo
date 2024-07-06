@@ -7,6 +7,7 @@ import com.example.apptodo.data.network.utils.NetworkChecker
 import com.example.apptodo.domain.ITodoItemsRepository
 import com.example.apptodo.presentation.ui_state.UIState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,6 +53,7 @@ class ItemListViewModel(
             networkChecker.isConnected.collect { isConnected ->
                 _isNetworkAvailable.value = isConnected
                 if (isConnected) {
+                    delay(1000)
                     synchronizeData()
                 }
             }
