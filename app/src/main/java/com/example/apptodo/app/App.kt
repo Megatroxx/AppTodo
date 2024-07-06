@@ -2,6 +2,8 @@ package com.example.apptodo.app
 
 import android.app.Application
 import android.content.Context
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.WorkManager
 import com.example.apptodo.data.database.AppDatabase
 import com.example.apptodo.data.network.interceptors.AuthInterceptor
 import com.example.apptodo.data.network.interceptors.LastKnownRevisionInterceptor
@@ -12,6 +14,7 @@ import com.example.apptodo.data.repository.DeviceNameRepository
 import com.example.apptodo.data.repository.LastKnownRevisionRepository
 import com.example.apptodo.data.repository.TodoItemsNetworkRepository
 import com.example.apptodo.data.repository.TodoItemsRepository
+import com.example.apptodo.domain.DataSyncWorker
 import com.example.apptodo.domain.ITodoItemsRepository
 import com.example.apptodo.presentation.viewmodels.ItemListViewModelFactory
 import com.example.apptodo.presentation.viewmodels.RedactorViewModelFactory
@@ -23,7 +26,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class App : Application() {
 
-    private lateinit var todoItemsRepository: ITodoItemsRepository
+    private lateinit var todoItemsRepository: TodoItemsRepository
+
+    fun getTodoItemsRepository(): TodoItemsRepository {
+        return todoItemsRepository
+    }
 
     lateinit var itemListViewModelFactory: ItemListViewModelFactory
 
@@ -52,6 +59,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        setupWorkManager()
 
         networkChecker = NetworkChecker(applicationContext)
 
@@ -68,5 +76,17 @@ class App : Application() {
         redactorViewModelFactory = RedactorViewModelFactory(todoItemsRepository)
 
     }
+
+    private fun setupWorkManager() {
+        val syncWorkRequest = DataSyncWorker.createWorkRequest()
+
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                "DataSyncWork",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                syncWorkRequest
+            )
+    }
+
 
 }
