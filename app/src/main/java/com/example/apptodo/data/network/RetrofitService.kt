@@ -20,23 +20,25 @@ object RetrofitService {
 
     private lateinit var lastKnownRevisionRepository: LastKnownRevisionRepository
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(TodoBackend.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .client(
-            OkHttpClient.Builder()
-                .addInterceptor(AuthInterceptor())
-                .addInterceptor(LastKnownRevisionInterceptor(lastKnownRevisionRepository))
-                .addInterceptor(HttpLoggingInterceptor().also {
-                    it.level = HttpLoggingInterceptor.Level.BODY
-                })
-                .build()
-        )
-        .build()
-
     internal fun initialize(lastKnownRevisionRepository: LastKnownRevisionRepository) {
         this.lastKnownRevisionRepository = lastKnownRevisionRepository
+    }
+
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(TodoBackend.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .client(
+                OkHttpClient.Builder()
+                    .addInterceptor(AuthInterceptor())
+                    .addInterceptor(LastKnownRevisionInterceptor(lastKnownRevisionRepository))
+                    .addInterceptor(HttpLoggingInterceptor().also {
+                        it.level = HttpLoggingInterceptor.Level.BODY
+                    })
+                    .build()
+            )
+            .build()
     }
 
     internal fun createTodoBackendService(): TodoBackend {

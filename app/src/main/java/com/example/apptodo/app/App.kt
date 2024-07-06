@@ -22,6 +22,7 @@ import com.example.apptodo.presentation.viewmodels.RedactorViewModelFactory
  */
 
 
+
 class App : Application() {
 
     private lateinit var todoItemsRepository: TodoItemsRepository
@@ -31,27 +32,28 @@ class App : Application() {
     }
 
     lateinit var itemListViewModelFactory: ItemListViewModelFactory
-
     lateinit var redactorViewModelFactory: RedactorViewModelFactory
 
     private lateinit var roomDataBase: AppDatabase
     private lateinit var deviceNameRepository: DeviceNameRepository
-    private val cloudTodoItemToEntityMapper by lazy {
-        CloudTodoItemToEntityMapper(
-            deviceNameRepository
-        )
-    }
-    private val lastKnownRevisionRepository = LastKnownRevisionRepository()
+    private lateinit var lastKnownRevisionRepository: LastKnownRevisionRepository
     private lateinit var networkChecker: NetworkChecker
+
+
+    private val cloudTodoItemToEntityMapper by lazy {
+        CloudTodoItemToEntityMapper(deviceNameRepository)
+    }
 
     override fun onCreate() {
         super.onCreate()
-        setupWorkManager()
 
+        lastKnownRevisionRepository = LastKnownRevisionRepository()
         networkChecker = NetworkChecker(applicationContext)
         roomDataBase = AppDatabase.getDatabase(this)
         deviceNameRepository = DeviceNameRepository(contentResolver)
+
         RetrofitService.initialize(lastKnownRevisionRepository)
+
         todoItemsRepository = TodoItemsRepository(
             roomDataBase.todoDao(),
             RetrofitService.createTodoBackendService(),
@@ -59,9 +61,12 @@ class App : Application() {
             cloudTodoItemToEntityMapper,
             lastKnownRevisionRepository
         )
+
         itemListViewModelFactory = ItemListViewModelFactory(todoItemsRepository, networkChecker)
         redactorViewModelFactory = RedactorViewModelFactory(todoItemsRepository)
 
+
+        setupWorkManager()
     }
 
     private fun setupWorkManager() {
