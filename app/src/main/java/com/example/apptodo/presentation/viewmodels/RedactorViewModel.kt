@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.domain.ITodoItemsRepository
 import com.example.apptodo.data.entity.Relevance
+import com.example.apptodo.presentation.ui_state.UIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +21,9 @@ class RedactorViewModel(
 
     private val _errorFlow = MutableStateFlow<String?>(null)
     val errorFlow = _errorFlow.asStateFlow()
+
+    private val _uiState = MutableStateFlow<UIState>(UIState.Idle)
+    val uiState: StateFlow<UIState> = _uiState
 
     fun setItem(item: TodoItem) {
         _item.value = item
@@ -43,9 +47,11 @@ class RedactorViewModel(
 
     fun deleteItem() {
         runSafeInBackground {
+            _uiState.value = UIState.Loading
             _item.value?.let {
                 todoItemsRepository.deleteItemById(it.id)
                 clearItem()
+                _uiState.value = UIState.Success
             }
         }
     }
@@ -53,6 +59,7 @@ class RedactorViewModel(
 
     fun saveItem(todoItem: TodoItem) {
         runSafeInBackground {
+            _uiState.value = UIState.Loading
             val item = todoItemsRepository.getItem(todoItem.id)
             if (item != null){
                 todoItemsRepository.updateItem(todoItem)
@@ -60,6 +67,7 @@ class RedactorViewModel(
             else
                 todoItemsRepository.addItem(todoItem)
             clearItem()
+            _uiState.value = UIState.Success
         }
     }
 
@@ -68,7 +76,7 @@ class RedactorViewModel(
             try {
                 block.invoke()
             } catch (e: Exception) {
-                _errorFlow.value = e.message ?: "something went wrong"
+                _uiState.value = UIState.Error(e.message ?: "something went wrong")
             }
         }
     }

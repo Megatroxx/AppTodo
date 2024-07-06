@@ -9,6 +9,7 @@ import com.example.apptodo.data.network.exception.NetworkException
 import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
 import com.example.apptodo.data.network.model.GenericToDoResponse
 import com.example.apptodo.data.network.model.UpdateSingleToDoRequest
+import com.example.apptodo.data.network.model.UpdateToDoListRequest
 import com.example.apptodo.data.network.utils.NetworkChecker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -104,6 +105,52 @@ class TodoItemsRepository(
             todoDao.saveList(remoteItems)
         }
     }
+
+    override suspend fun synchronizeData() {
+        val localItems = todoDao.getItems()
+
+        val remoteItems = getItemsByNetwork()
+
+        val changesToSync = mutableListOf<TodoItem>()
+
+
+        localItems.forEach { localItem ->
+            val remoteItem = remoteItems.find { it.id == localItem.id }
+            if (remoteItem == null) {
+                changesToSync.add(localItem)
+            } else {
+                if (localItem.changeDate > remoteItem.changeDate) {
+                    changesToSync.add(localItem)
+                }
+            }
+        }
+        remoteItems.forEach { remoteItem ->
+            val localItem = localItems.find { it.id == remoteItem.id }
+            if (localItem == null) {
+                todoDao.addItem(remoteItem)
+            } else {
+                if (remoteItem.changeDate > localItem.changeDate) {
+                    changesToSync.add(remoteItem)
+                }
+            }
+        }
+
+        if (changesToSync.isNotEmpty()) {
+            todoDao.saveList(changesToSync.toList())
+            val cloudItemsToUpdate = changesToSync.map { cloudTodoItemToEntityMapper.mapFrom(it) }
+
+            val updateRequest = UpdateToDoListRequest(
+                status = "ok",
+                list = cloudItemsToUpdate
+            )
+            handle {
+                todoBackend.updateToDoList(updateRequest)
+            }
+        }
+    }
+
+
+
 
     private suspend fun <T : GenericToDoResponse> handle(block: suspend () -> Response<T>): T {
         val response = block.invoke()

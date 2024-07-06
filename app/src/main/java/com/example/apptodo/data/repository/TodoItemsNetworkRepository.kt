@@ -67,6 +67,10 @@ class TodoItemsNetworkRepository(
         }
     }
 
+    override suspend fun synchronizeData() {
+        TODO("Not yet implemented")
+    }
+
     private suspend fun <T : GenericToDoResponse> handle(block: suspend () -> Response<T>): T {
         val response = block.invoke()
         val body = response.body()

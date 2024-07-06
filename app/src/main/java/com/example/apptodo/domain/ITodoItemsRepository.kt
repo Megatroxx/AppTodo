@@ -11,5 +11,6 @@ interface ITodoItemsRepository {
     suspend fun checkItem(item: TodoItem, checked: Boolean)
     suspend fun countChecked(): Int
     suspend fun updateItem(updatedItem: TodoItem)
+    suspend fun synchronizeData()
 
 }

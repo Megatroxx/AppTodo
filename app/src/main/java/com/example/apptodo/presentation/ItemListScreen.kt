@@ -13,14 +13,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -28,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -35,6 +43,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -57,7 +68,9 @@ import com.example.apptodo.presentation.navigation.DestinationEnum
 import com.example.apptodo.presentation.viewmodels.ItemListViewModel
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 import com.example.apptodo.data.entity.Relevance
+import com.example.apptodo.presentation.ui_state.UIState
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,21 +85,75 @@ fun ItemListScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val isVisible = itemListViewModel.isVisible.collectAsState()
     val doneCounter = itemListViewModel.counter.collectAsState()
-    val errorState = merge(itemListViewModel.errorFlow, redactorViewModel.errorFlow)
+    val uiState by itemListViewModel.uiState.collectAsState()
+    val isNetworkAvailable by itemListViewModel.isNetworkAvailable.collectAsState()
 
-    LaunchedEffect(itemListViewModel) {
-        itemListViewModel.getItems()
-        errorState.collect {
-            if (it != null)
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
+    val showLoadingDialog = remember { mutableStateOf(false) }
+
+    if (showLoadingDialog.value) {
+        BasicAlertDialog(
+            onDismissRequest = {},
+            content = {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
+                        .padding(16.dp)
+                ) {
+                    Text(text = "Loading", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(text = "Please wait...", style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        )
+    }
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UIState.Loading -> showLoadingDialog.value = true
+            is UIState.Success -> {
+                showLoadingDialog.value = false
+            }
+            is UIState.Error -> {
+                showLoadingDialog.value = false
+                snackbarHostState.showSnackbar("Кажется, возникла ошибка. Пожалуйста, попробуйте повторить запрос позже")
+            }
+            else -> {}
         }
     }
+
+    LaunchedEffect(isNetworkAvailable) {
+        coroutineScope.launch {
+            if (!isNetworkAvailable) {
+                snackbarHostState.showSnackbar(
+                    message = "Отсутствует подключение к интернету. Данные могут быть не синхронизированы:(",
+                    actionLabel = "ОК",
+                    duration = SnackbarDuration.Indefinite
+                )
+            } else {
+                snackbarHostState.currentSnackbarData?.dismiss()
+            }
+        }
+    }
+
+    LaunchedEffect(todoList) {
+        itemListViewModel.getItems()
+    }
+
 
 
     ToDoAppTheme {
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 Surface(
                     modifier = Modifier

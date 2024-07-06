@@ -3,23 +3,27 @@ package com.example.apptodo.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.data.network.utils.NetworkChecker
 import com.example.apptodo.data.repository.TodoItemsRepository
 import com.example.apptodo.domain.ITodoItemsRepository
+import com.example.apptodo.presentation.ui_state.UIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ItemListViewModel(
-    private val todoItemsRepository: ITodoItemsRepository
+    private val todoItemsRepository: ITodoItemsRepository,
+    private val networkChecker: NetworkChecker
 ) : ViewModel() {
 
 
     private val _items = MutableStateFlow<List<TodoItem>>(emptyList())
     val items = _items.asStateFlow()
 
-    private val _errorFlow = MutableStateFlow<String?>(null)
-    val errorFlow = _errorFlow.asStateFlow()
+    private val _uiState = MutableStateFlow<UIState>(UIState.Idle)
+    val uiState = _uiState.asStateFlow()
 
     private val _counter = MutableStateFlow(0)
     val counter = _counter.asStateFlow()
@@ -27,10 +31,25 @@ class ItemListViewModel(
     private val _isVisible = MutableStateFlow<Boolean>(false)
     val isVisible = _isVisible.asStateFlow()
 
+    private val _isNetworkAvailable = MutableStateFlow<Boolean>(false)
+    val isNetworkAvailable: StateFlow<Boolean> get() = _isNetworkAvailable
+
 
 
     init{
         getItems(false)
+        observeNetworkChanges()
+    }
+
+    private fun observeNetworkChanges() {
+        viewModelScope.launch {
+            networkChecker.isConnected.collect { isConnected ->
+                _isNetworkAvailable.value = isConnected
+                if (isConnected) {
+                    synchronizeData()
+                }
+            }
+        }
     }
 
 
@@ -51,19 +70,32 @@ class ItemListViewModel(
     }
 
 
-
     fun getItems(filter: Boolean = false) {
+        _uiState.value = UIState.Loading
         runSafeInBackground {
-            val todoItems = todoItemsRepository.getItems()
+            try {
+                val todoItems = todoItemsRepository.getItems()
+                val filtered = if (filter) todoItems.filter { !it.flagAchievement } else todoItems
+                val countAchievement = todoItemsRepository.countChecked()
 
-            val filtered = if(filter)
-                todoItems.filter { !it.flagAchievement }
-            else todoItems
+                _items.value = filtered
+                _counter.value = countAchievement
+                _uiState.value = UIState.Success
+            } catch (e: Exception) {
+                _uiState.value = UIState.Error(e.message ?: "Something went wrong")
+            }
+        }
+    }
 
-            val countAchievement = todoItemsRepository.countChecked()
-
-            _items.value = filtered
-            _counter.value = countAchievement
+    private fun synchronizeData() {
+        _uiState.value = UIState.Loading
+        runSafeInBackground {
+            try {
+                todoItemsRepository.synchronizeData()
+                _uiState.value = UIState.Success
+            } catch (e: Exception) {
+                _uiState.value = UIState.Error(e.message ?: "Something went wrong")
+            }
         }
     }
 
@@ -80,7 +112,7 @@ class ItemListViewModel(
             try {
                 block.invoke()
             } catch (e: Exception) {
-                _errorFlow.value = e.message ?: "something went wrong"
+                _uiState.value = UIState.Error(e.message ?: "Something went wrong")
             }
         }
     }

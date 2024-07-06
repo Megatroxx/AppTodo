@@ -53,16 +53,18 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        networkChecker = NetworkChecker(applicationContext)
+
         roomDataBase = AppDatabase.getDatabase(this)
         deviceNameRepository = DeviceNameRepository(contentResolver)
         todoItemsRepository = TodoItemsRepository(
             roomDataBase.todoDao(),
             retrofit.create(TodoBackend::class.java),
-            NetworkChecker(applicationContext),
+            networkChecker,
             cloudTodoItemToEntityMapper,
             lastKnownRevisionRepository
         )
-        itemListViewModelFactory = ItemListViewModelFactory(todoItemsRepository)
+        itemListViewModelFactory = ItemListViewModelFactory(todoItemsRepository, networkChecker)
         redactorViewModelFactory = RedactorViewModelFactory(todoItemsRepository)
 
     }

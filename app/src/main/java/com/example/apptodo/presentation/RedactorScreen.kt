@@ -9,18 +9,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -58,6 +64,7 @@ import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.example.apptodo.data.entity.TodoItem
+import com.example.apptodo.presentation.ui_state.UIState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -75,20 +82,57 @@ fun RedactorScreen(
 
     val currentItem by redactorViewModel.item.collectAsState()
 
+    val uiState by redactorViewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     var textValue by remember { mutableStateOf(currentItem?.text.orEmpty()) }
     var relevance by remember { mutableStateOf(currentItem?.relevance ?: Relevance.BASE) }
     var deadline by remember { mutableStateOf(currentItem?.deadline.orEmpty()) }
 
-    LaunchedEffect(key1 = Unit) {
-        redactorViewModel.errorFlow.collect {
-            if (it != null)
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+    val showLoadingDialog = remember { mutableStateOf(false) }
+
+    if (showLoadingDialog.value) {
+        BasicAlertDialog(
+            onDismissRequest = {},
+            content = {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
+                        .padding(16.dp)
+                ) {
+                    Text(text = "Loading", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(text = "Please wait...", style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        )
+    }
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UIState.Loading -> showLoadingDialog.value = true
+            is UIState.Success -> {
+                showLoadingDialog.value = false
+            }
+            is UIState.Error -> {
+                showLoadingDialog.value = false
+                snackbarHostState.showSnackbar("Кажется, возникла ошибка. Пожалуйста, попробуйте повторить запрос позже")
+            }
+            else -> {}
         }
     }
+
+
 
     val scrollState = rememberScrollState()
     ToDoAppTheme {
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 Surface(
                     modifier = Modifier
