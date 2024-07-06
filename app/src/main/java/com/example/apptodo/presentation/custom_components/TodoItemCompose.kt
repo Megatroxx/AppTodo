@@ -72,11 +72,11 @@ fun TodoItem(
                 colors = CheckboxDefaults.colors(
                     checkedColor = MaterialTheme.colorScheme.scrim,
                     uncheckedColor =
-                    if (todoItem.relevance == Relevance.URGENT) MaterialTheme.colorScheme.error
+                    if (todoItem.relevance == Relevance.IMPORTANT) MaterialTheme.colorScheme.error
                     else MaterialTheme.colorScheme.onTertiary,
                     checkmarkColor = MaterialTheme.colorScheme.surface,
                     disabledCheckedColor = MaterialTheme.colorScheme.scrim,
-                    disabledUncheckedColor = if (todoItem.relevance == Relevance.URGENT) MaterialTheme.colorScheme.error
+                    disabledUncheckedColor = if (todoItem.relevance == Relevance.IMPORTANT) MaterialTheme.colorScheme.error
                     else MaterialTheme.colorScheme.onTertiary,
                 ),
             )
@@ -87,7 +87,7 @@ fun TodoItem(
             ) {
                 Box {
                     var itemText = todoItem.text
-                    if (!checkedState && todoItem.relevance == Relevance.URGENT) {
+                    if (!checkedState && todoItem.relevance == Relevance.IMPORTANT) {
                         Image(
                             painter = painterResource(R.drawable.hug),
                             contentDescription = stringResource(R.string.task_has_status_high),

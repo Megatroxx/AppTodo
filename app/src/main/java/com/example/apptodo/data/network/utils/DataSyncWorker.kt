@@ -1,6 +1,7 @@
 package com.example.apptodo.data.network.utils
 
 import android.content.Context
+import android.util.Log
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
@@ -31,6 +32,7 @@ class DataSyncWorker(
             todoItemsRepository.synchronizeData()
             Result.success()
         } catch (e: Exception) {
+            Log.d("AAA", "aaa")
             Result.retry()
         }
     }

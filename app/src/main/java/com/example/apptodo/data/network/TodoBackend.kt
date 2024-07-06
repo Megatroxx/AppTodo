@@ -25,7 +25,6 @@ interface TodoBackend {
     suspend fun getToDoList(): Response<GetToDoListResponse>
 
     @PATCH("list")
-    @Headers("Authorization: Bearer")
     suspend fun updateToDoList(@Body request: UpdateToDoListRequest): Response<GetToDoListResponse>
 
     @POST("list")

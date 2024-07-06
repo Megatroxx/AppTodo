@@ -85,7 +85,7 @@ fun RedactorScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     var textValue by remember { mutableStateOf(currentItem?.text.orEmpty()) }
-    var relevance by remember { mutableStateOf(currentItem?.relevance ?: Relevance.BASE) }
+    var relevance by remember { mutableStateOf(currentItem?.relevance ?: Relevance.BASIC) }
     var deadline by remember { mutableStateOf(currentItem?.deadline.orEmpty()) }
 
     val showLoadingDialog = remember { mutableStateOf(false) }
@@ -249,8 +249,8 @@ fun RedactorScreen(
                                 text = {
                                     val relevanceText = when (curImportance) {
                                         Relevance.LOW -> "Низкая"
-                                        Relevance.BASE -> "Нет"
-                                        Relevance.URGENT -> "Высокая"
+                                        Relevance.BASIC -> "Нет"
+                                        Relevance.IMPORTANT -> "Высокая"
                                     }
                                     Text(text = relevanceText)
                                 }
@@ -260,7 +260,7 @@ fun RedactorScreen(
                 }
                 Text(
                     text =
-                    if (relevance == Relevance.URGENT) "Высокая"
+                    if (relevance == Relevance.IMPORTANT) "Высокая"
                     else if (relevance == Relevance.LOW) "Низкая"
                     else "Нет",
                     modifier = Modifier
@@ -270,7 +270,7 @@ fun RedactorScreen(
                         },
                     style = MaterialTheme.typography.bodySmall,
                     color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
-                    else if (relevance == Relevance.URGENT)
+                    else if (relevance == Relevance.IMPORTANT)
                     {
                         MaterialTheme.colorScheme.error
                     } else {

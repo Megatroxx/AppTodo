@@ -49,17 +49,17 @@ class CloudTodoItemToEntityMapper(private val deviceNameRepository: DeviceNameRe
     private fun importanceToRelevance(importance: String): Relevance {
         return when (importance) {
             "low" -> Relevance.LOW
-            "basic" -> Relevance.BASE
-            "important" -> Relevance.URGENT
-            else -> Relevance.BASE
+            "basic" -> Relevance.BASIC
+            "important" -> Relevance.IMPORTANT
+            else -> Relevance.BASIC
         }
     }
 
     private fun relevanceToImportance(relevance: Relevance): String {
         return when (relevance) {
             Relevance.LOW -> "low"
-            Relevance.BASE -> "basic"
-            Relevance.URGENT -> "important"
+            Relevance.BASIC -> "basic"
+            Relevance.IMPORTANT -> "important"
         }
     }
 
