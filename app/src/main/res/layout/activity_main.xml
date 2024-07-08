@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_place"
-        android:name="com.example.apptodo.legacy_view.ItemListFragment"
+        android:name="com.example.apptodo.view_legacy.ItemListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
