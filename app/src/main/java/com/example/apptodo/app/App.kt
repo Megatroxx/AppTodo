@@ -13,6 +13,8 @@ import com.example.apptodo.data.repository.LastKnownRevisionRepository
 import com.example.apptodo.data.repository.TodoItemsRepository
 import com.example.apptodo.presentation.viewmodels.ItemListViewModelFactory
 import com.example.apptodo.presentation.viewmodels.RedactorViewModelFactory
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 
 /**
@@ -21,9 +23,18 @@ import com.example.apptodo.presentation.viewmodels.RedactorViewModelFactory
  * and manages background synchronization using WorkManager.
  */
 
-
-
+@HiltAndroidApp
 class App : Application() {
+
+    @Inject
+    internal lateinit var deviceNameRepository: DeviceNameRepository
+
+    @Inject
+    internal lateinit var networkChecker: NetworkChecker
+
+    @Inject
+    internal lateinit var lastKnownRevisionRepository: LastKnownRevisionRepository
+
 
     private lateinit var todoItemsRepository: TodoItemsRepository
 
@@ -35,9 +46,6 @@ class App : Application() {
     lateinit var redactorViewModelFactory: RedactorViewModelFactory
 
     private lateinit var roomDataBase: AppDatabase
-    private lateinit var deviceNameRepository: DeviceNameRepository
-    private lateinit var lastKnownRevisionRepository: LastKnownRevisionRepository
-    private lateinit var networkChecker: NetworkChecker
 
 
     private val cloudTodoItemToEntityMapper by lazy {
@@ -47,7 +55,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        lastKnownRevisionRepository = LastKnownRevisionRepository()
         networkChecker = NetworkChecker(applicationContext)
         roomDataBase = AppDatabase.getDatabase(this)
         deviceNameRepository = DeviceNameRepository(contentResolver)
