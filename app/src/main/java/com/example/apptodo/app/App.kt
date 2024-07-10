@@ -1,10 +1,13 @@
 package com.example.apptodo.app
 
 import android.app.Application
+import android.util.Log
+import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
-import com.example.apptodo.data.database.AppDatabase
-import com.example.apptodo.data.network.RetrofitService
+import androidx.work.WorkerFactory
+import com.example.apptodo.data.dao.TodoDao
+import com.example.apptodo.data.network.TodoBackend
 import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
 import com.example.apptodo.data.network.utils.DataSyncWorker
 import com.example.apptodo.data.network.utils.NetworkChecker
@@ -24,7 +27,7 @@ import javax.inject.Inject
  */
 
 @HiltAndroidApp
-class App : Application() {
+class App : Application(), Configuration.Provider{
 
     @Inject
     internal lateinit var deviceNameRepository: DeviceNameRepository
@@ -35,39 +38,36 @@ class App : Application() {
     @Inject
     internal lateinit var lastKnownRevisionRepository: LastKnownRevisionRepository
 
+    @Inject
+    internal lateinit var cloudTodoItemToEntityMapper: CloudTodoItemToEntityMapper
 
-    private lateinit var todoItemsRepository: TodoItemsRepository
+    @Inject
+    lateinit var todoDao: TodoDao
 
-    internal fun getTodoItemsRepository(): TodoItemsRepository {
-        return todoItemsRepository
-    }
+    @Inject
+    lateinit var todoBackend: TodoBackend
+
+    @Inject
+    lateinit var todoItemsRepository: TodoItemsRepository
+
+    @Inject
+    lateinit var workerFactory: WorkerFactory
+
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+
 
     lateinit var itemListViewModelFactory: ItemListViewModelFactory
     lateinit var redactorViewModelFactory: RedactorViewModelFactory
 
-    private lateinit var roomDataBase: AppDatabase
 
-
-    private val cloudTodoItemToEntityMapper by lazy {
-        CloudTodoItemToEntityMapper(deviceNameRepository)
-    }
 
     override fun onCreate() {
         super.onCreate()
 
-        networkChecker = NetworkChecker(applicationContext)
-        roomDataBase = AppDatabase.getDatabase(this)
-        deviceNameRepository = DeviceNameRepository(contentResolver)
-
-        RetrofitService.initialize(lastKnownRevisionRepository)
-
-        todoItemsRepository = TodoItemsRepository(
-            roomDataBase.todoDao(),
-            RetrofitService.createTodoBackendService(),
-            networkChecker,
-            cloudTodoItemToEntityMapper,
-            lastKnownRevisionRepository
-        )
 
         itemListViewModelFactory = ItemListViewModelFactory(todoItemsRepository, networkChecker)
         redactorViewModelFactory = RedactorViewModelFactory(todoItemsRepository)

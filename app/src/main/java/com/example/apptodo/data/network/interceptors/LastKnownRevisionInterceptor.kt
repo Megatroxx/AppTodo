@@ -3,6 +3,7 @@ package com.example.apptodo.data.network.interceptors
 import com.example.apptodo.data.repository.LastKnownRevisionRepository
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
 
 /**
@@ -11,7 +12,7 @@ import okhttp3.Response
  * @property lastKnownRevisionRepository Repository for accessing the last known revision.
  */
 
-class LastKnownRevisionInterceptor(
+class LastKnownRevisionInterceptor @Inject constructor(
     private val lastKnownRevisionRepository: LastKnownRevisionRepository
 ) : Interceptor {
 
