@@ -15,6 +15,7 @@ import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
 import com.example.apptodo.presentation.navigation.AppScreen
 import com.example.apptodo.presentation.viewmodels.ItemListViewModel
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -23,18 +24,18 @@ import com.example.apptodo.presentation.viewmodels.RedactorViewModel
  * and configures the interface using Jetpack Compose components.
  */
 
-
+@AndroidEntryPoint
 class MainActivityCompose : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val itemListFactory = (application as App).itemListViewModelFactory
+/*        val itemListFactory = (application as App).itemListViewModelFactory
         val itemListViewModel =
             ViewModelProvider(this, itemListFactory)[ItemListViewModel::class.java]
 
         val redactorFactory = (application as App).redactorViewModelFactory
         val redactorViewModel =
-            ViewModelProvider(this, redactorFactory)[RedactorViewModel::class.java]
+            ViewModelProvider(this, redactorFactory)[RedactorViewModel::class.java]*/
         enableEdgeToEdge()
         setContent {
             ToDoAppTheme {
@@ -43,11 +44,7 @@ class MainActivityCompose : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController: NavHostController = rememberNavController()
-                    AppScreen(
-                        itemListViewModel = itemListViewModel,
-                        redactorViewModel = redactorViewModel,
-                        navController = navController
-                    )
+                    AppScreen(navController = navController)
                 }
             }
 

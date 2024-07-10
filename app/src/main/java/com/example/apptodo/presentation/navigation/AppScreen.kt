@@ -1,6 +1,8 @@
 package com.example.apptodo.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,10 +25,9 @@ import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 @Composable
 fun AppScreen(
     navController: NavHostController,
-    itemListViewModel: ItemListViewModel,
-    redactorViewModel: RedactorViewModel
-
 ) {
+    val itemListViewModel: ItemListViewModel = hiltViewModel()
+    val redactorViewModel: RedactorViewModel = hiltViewModel()
     NavHost(
         navController = navController,
         startDestination = "appScreen",

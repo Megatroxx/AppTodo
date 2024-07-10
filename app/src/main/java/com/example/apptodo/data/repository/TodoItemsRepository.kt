@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 /**
@@ -29,7 +31,8 @@ import retrofit2.Response
  */
 
 
-class TodoItemsRepository(
+@Singleton
+class TodoItemsRepository @Inject constructor(
     private val todoDao: TodoDao,
     private val todoBackend: TodoBackend,
     private val networkChecker: NetworkChecker,

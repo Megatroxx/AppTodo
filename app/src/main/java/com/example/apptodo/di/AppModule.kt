@@ -13,6 +13,7 @@ import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
 import com.example.apptodo.data.network.utils.NetworkChecker
 import com.example.apptodo.data.repository.LastKnownRevisionRepository
 import com.example.apptodo.data.repository.TodoItemsRepository
+import com.example.apptodo.domain.ITodoItemsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -79,7 +80,7 @@ object AppModule {
         networkChecker: NetworkChecker,
         cloudTodoItemToEntityMapper: CloudTodoItemToEntityMapper,
         lastKnownRevisionRepository: LastKnownRevisionRepository
-    ): TodoItemsRepository {
+    ): ITodoItemsRepository {
         return TodoItemsRepository(
             todoDao,
             todoBackend,
@@ -88,9 +89,6 @@ object AppModule {
             lastKnownRevisionRepository
         )
     }
-
-
-
 
 
 

@@ -60,17 +60,11 @@ class App : Application(), Configuration.Provider{
             .build()
 
 
-    lateinit var itemListViewModelFactory: ItemListViewModelFactory
-    lateinit var redactorViewModelFactory: RedactorViewModelFactory
-
 
 
     override fun onCreate() {
         super.onCreate()
 
-
-        itemListViewModelFactory = ItemListViewModelFactory(todoItemsRepository, networkChecker)
-        redactorViewModelFactory = RedactorViewModelFactory(todoItemsRepository)
 
 
         setupWorkManager()

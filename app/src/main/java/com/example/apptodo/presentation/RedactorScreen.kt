@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.apptodo.R
 import com.example.apptodo.data.entity.Relevance
@@ -159,8 +160,12 @@ fun RedactorScreen(
                                             relevance = relevance,
                                             deadline = deadline,
                                             flagAchievement = false,
-                                            creationDate = LocalDate.now().toString(),
-                                            changeDate = LocalDate.now().toString()
+                                            creationDate = LocalDate
+                                                .now()
+                                                .toString(),
+                                            changeDate = LocalDate
+                                                .now()
+                                                .toString()
                                         )
 
                                         redactorViewModel.setItem(newTodoItem)
