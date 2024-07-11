@@ -4,13 +4,16 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.WorkerFactory
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class WorkerModule {
+object WorkerModule {
 
-    @Binds
-    abstract fun bindWorkerFactory(factory: HiltWorkerFactory): WorkerFactory
+    @Provides
+    fun provideWorkerFactory(hiltWorkerFactory: HiltWorkerFactory): WorkerFactory {
+        return hiltWorkerFactory
+    }
 }

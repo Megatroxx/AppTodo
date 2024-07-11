@@ -45,7 +45,9 @@ fun AppScreen(
             }
 
             composable(DestinationEnum.REDACTOR_SCREEN.destString) {
-                RedactorScreen(navController = navController, redactorViewModel = redactorViewModel)
+                RedactorScreen(navController = navController,
+                    redactorViewModel = redactorViewModel
+                )
             }
 
         }

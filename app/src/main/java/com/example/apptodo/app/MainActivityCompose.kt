@@ -28,14 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivityCompose : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-/*        val itemListFactory = (application as App).itemListViewModelFactory
-        val itemListViewModel =
-            ViewModelProvider(this, itemListFactory)[ItemListViewModel::class.java]
-
-        val redactorFactory = (application as App).redactorViewModelFactory
-        val redactorViewModel =
-            ViewModelProvider(this, redactorFactory)[RedactorViewModel::class.java]*/
         enableEdgeToEdge()
         setContent {
             ToDoAppTheme {

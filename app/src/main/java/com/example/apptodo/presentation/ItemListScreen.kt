@@ -78,6 +78,7 @@ fun ItemListScreen(
     itemListViewModel: ItemListViewModel,
     redactorViewModel: RedactorViewModel
 ) {
+
     val context = LocalContext.current
     val todoList by itemListViewModel.items.collectAsState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()

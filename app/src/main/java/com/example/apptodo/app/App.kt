@@ -1,21 +1,7 @@
 package com.example.apptodo.app
 
 import android.app.Application
-import android.util.Log
-import androidx.work.Configuration
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.WorkManager
-import androidx.work.WorkerFactory
-import com.example.apptodo.data.dao.TodoDao
-import com.example.apptodo.data.network.TodoBackend
-import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
-import com.example.apptodo.data.network.utils.DataSyncWorker
-import com.example.apptodo.data.network.utils.NetworkChecker
-import com.example.apptodo.data.repository.DeviceNameRepository
-import com.example.apptodo.data.repository.LastKnownRevisionRepository
-import com.example.apptodo.data.repository.TodoItemsRepository
-import com.example.apptodo.presentation.viewmodels.ItemListViewModelFactory
-import com.example.apptodo.presentation.viewmodels.RedactorViewModelFactory
+import com.example.apptodo.data.network.utils.WorkManagerInitialize
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -27,57 +13,15 @@ import javax.inject.Inject
  */
 
 @HiltAndroidApp
-class App : Application(), Configuration.Provider{
+class App : Application()
+{
 
     @Inject
-    internal lateinit var deviceNameRepository: DeviceNameRepository
-
-    @Inject
-    internal lateinit var networkChecker: NetworkChecker
-
-    @Inject
-    internal lateinit var lastKnownRevisionRepository: LastKnownRevisionRepository
-
-    @Inject
-    internal lateinit var cloudTodoItemToEntityMapper: CloudTodoItemToEntityMapper
-
-    @Inject
-    lateinit var todoDao: TodoDao
-
-    @Inject
-    lateinit var todoBackend: TodoBackend
-
-    @Inject
-    lateinit var todoItemsRepository: TodoItemsRepository
-
-    @Inject
-    lateinit var workerFactory: WorkerFactory
-
-
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-
-
-
+    lateinit var workManagerInitializer: WorkManagerInitialize
 
     override fun onCreate() {
         super.onCreate()
 
-
-
-        setupWorkManager()
-    }
-
-    private fun setupWorkManager() {
-        val syncWorkRequest = DataSyncWorker.createWorkRequest()
-
-        WorkManager.getInstance(this)
-            .enqueueUniquePeriodicWork(
-                "DataSyncWork",
-                ExistingPeriodicWorkPolicy.REPLACE,
-                syncWorkRequest
-            )
+        workManagerInitializer.setupWorkManager()
     }
 }

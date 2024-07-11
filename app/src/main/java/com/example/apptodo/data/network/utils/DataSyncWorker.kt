@@ -14,6 +14,7 @@ import com.example.apptodo.data.repository.TodoItemsRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * A Worker class responsible for periodic synchronization of data between
