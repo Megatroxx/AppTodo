@@ -1,11 +1,9 @@
-package com.example.apptodo.di
+package com.example.apptodo.data.repository
 
 import com.example.apptodo.data.dao.TodoDao
 import com.example.apptodo.data.network.TodoBackend
 import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
 import com.example.apptodo.data.network.utils.NetworkChecker
-import com.example.apptodo.data.repository.LastKnownRevisionRepository
-import com.example.apptodo.data.repository.TodoItemsRepository
 import com.example.apptodo.domain.ITodoItemsRepository
 import dagger.Module
 import dagger.Provides

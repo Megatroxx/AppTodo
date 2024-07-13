@@ -1,7 +1,5 @@
-package com.example.apptodo.di
+package com.example.apptodo.data.network
 
-import com.example.apptodo.data.network.RetrofitServ
-import com.example.apptodo.data.network.TodoBackend
 import com.example.apptodo.data.network.interceptors.AuthInterceptor
 import com.example.apptodo.data.network.interceptors.LastKnownRevisionInterceptor
 import dagger.Module

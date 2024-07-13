@@ -1,9 +1,8 @@
-package com.example.apptodo.di
+package com.example.apptodo.data.database
 
 import android.content.Context
 import androidx.room.Room
 import com.example.apptodo.data.dao.TodoDao
-import com.example.apptodo.data.database.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

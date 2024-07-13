@@ -1,19 +1,8 @@
-package com.example.apptodo.di
+package com.example.apptodo.app
 
 import android.content.ContentResolver
 import android.content.Context
-import com.example.apptodo.data.database.AppDatabase
-import androidx.room.Room
-import com.example.apptodo.data.dao.TodoDao
-import com.example.apptodo.data.network.RetrofitServ
-import com.example.apptodo.data.network.TodoBackend
-import com.example.apptodo.data.network.interceptors.AuthInterceptor
-import com.example.apptodo.data.network.interceptors.LastKnownRevisionInterceptor
-import com.example.apptodo.data.network.mapper.CloudTodoItemToEntityMapper
-import com.example.apptodo.data.network.utils.NetworkChecker
 import com.example.apptodo.data.repository.LastKnownRevisionRepository
-import com.example.apptodo.data.repository.TodoItemsRepository
-import com.example.apptodo.domain.ITodoItemsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

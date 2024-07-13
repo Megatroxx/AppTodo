@@ -1,19 +1,16 @@
-package com.example.apptodo.di
+package com.example.apptodo.data.network.utils
 
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.WorkerFactory
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object WorkerModule {
+abstract class SyncWorkerModule {
 
-    @Provides
-    fun provideWorkerFactory(hiltWorkerFactory: HiltWorkerFactory): WorkerFactory {
-        return hiltWorkerFactory
-    }
+    @Binds
+    abstract fun bindWorkerFactory(hiltWorkerFactory: HiltWorkerFactory): WorkerFactory
 }
