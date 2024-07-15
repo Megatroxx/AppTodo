@@ -28,10 +28,17 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".app.MainActivity"
-            android:exported="true">
-        </activity>
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="com.example.apptodo.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
     </application>
 
 </manifest>

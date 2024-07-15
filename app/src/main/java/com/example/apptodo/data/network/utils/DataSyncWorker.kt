@@ -2,6 +2,7 @@ package com.example.apptodo.data.network.utils
 
 import android.content.Context
 import android.util.Log
+import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
@@ -10,21 +11,22 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerParameters
 import com.example.apptodo.app.App
 import com.example.apptodo.data.repository.TodoItemsRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * A Worker class responsible for periodic synchronization of data between
  * a local database and a remote server.
  **/
 
-class DataSyncWorker(
-    context: Context,
-    workerParams: WorkerParameters
+@HiltWorker
+class DataSyncWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val todoItemsRepository: TodoItemsRepository
 ) : CoroutineWorker(context, workerParams) {
-
-    private val todoItemsRepository: TodoItemsRepository by lazy {
-        (context.applicationContext as App).getTodoItemsRepository()
-    }
 
 
     override suspend fun doWork(): Result {

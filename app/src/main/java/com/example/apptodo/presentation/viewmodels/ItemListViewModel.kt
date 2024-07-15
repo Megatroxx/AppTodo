@@ -1,17 +1,20 @@
 package com.example.apptodo.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.data.network.utils.NetworkChecker
 import com.example.apptodo.domain.ITodoItemsRepository
 import com.example.apptodo.presentation.ui_state.UIState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 /**
@@ -21,7 +24,8 @@ import kotlinx.coroutines.launch
  * @property networkChecker Utility class for checking network connectivity.
  */
 
-class ItemListViewModel(
+@HiltViewModel
+class ItemListViewModel @Inject constructor(
     private val todoItemsRepository: ITodoItemsRepository,
     private val networkChecker: NetworkChecker
 ) : ViewModel() {

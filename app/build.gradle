@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -91,11 +92,15 @@ dependencies {
     implementation libs.androidx.room.common
     implementation libs.androidx.room.ktx
     implementation libs.androidx.work.runtime.ktx
+    implementation libs.androidx.hilt.common
+    implementation libs.androidx.hilt.work
+    implementation libs.androidx.work.runtime.ktx.v271
     kapt "androidx.room:room-compiler:2.6.1"
     implementation libs.converter.scalars
 
 // Testing dependencies
     testImplementation libs.junit
+    androidTestImplementation libs.ui.test.junit4
     androidTestImplementation libs.androidx.junit.v120
     androidTestImplementation libs.androidx.espresso.core.v360
     androidTestImplementation libs.androidx.ui.test.junit4
@@ -106,4 +111,10 @@ dependencies {
 // BOM (Bill of Materials)
     implementation platform(libs.compose.bom)
     implementation platform(libs.kotlin.bom)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
+    implementation libs.androidx.hilt.navigation.compose
+    implementation libs.androidx.activity.ktx
 }

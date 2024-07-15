@@ -7,6 +7,8 @@ import com.example.apptodo.data.repository.DeviceNameRepository
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 /**
@@ -15,7 +17,8 @@ import java.util.Locale
  * @property deviceNameRepository Repository for retrieving the device name.
  */
 
-class CloudTodoItemToEntityMapper(private val deviceNameRepository: DeviceNameRepository) {
+@Singleton
+class CloudTodoItemToEntityMapper @Inject constructor(private val deviceNameRepository: DeviceNameRepository) {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 

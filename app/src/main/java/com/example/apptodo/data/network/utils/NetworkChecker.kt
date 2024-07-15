@@ -4,8 +4,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Helper class to check network connectivity status using Android's ConnectivityManager.
@@ -17,8 +20,10 @@ import kotlinx.coroutines.flow.StateFlow
  */
 
 
-
-class NetworkChecker(private val context: Context) {
+@Singleton
+class NetworkChecker @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     private val connectivityManager: ConnectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

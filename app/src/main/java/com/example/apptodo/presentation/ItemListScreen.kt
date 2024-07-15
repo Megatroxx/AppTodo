@@ -1,5 +1,6 @@
 package com.example.apptodo.presentation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -48,6 +51,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.apptodo.R
 import com.example.apptodo.presentation.custom_components.BasicAlertDialogCompose
@@ -73,8 +77,9 @@ import kotlinx.coroutines.launch
 fun ItemListScreen(
     navController: NavController,
     itemListViewModel: ItemListViewModel,
-    redactorViewModel: RedactorViewModel,
+    redactorViewModel: RedactorViewModel
 ) {
+
     val context = LocalContext.current
     val todoList by itemListViewModel.items.collectAsState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
