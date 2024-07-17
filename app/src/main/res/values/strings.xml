@@ -12,6 +12,7 @@
 
     <string name="my_items">Мои дела</string>
     <string name="hide_completed_tasks">Скрывать выполненные задачи</string>
+    <string name="settings_snackbar">Выбранные настройки будут применены при перезапуске приложения</string>
     <string name="show_completed_tasks">Показать выполненные задачи</string>
     <string name="add_new_task">Добавить новую задачу</string>
     <string name="done">Выполнено - </string>

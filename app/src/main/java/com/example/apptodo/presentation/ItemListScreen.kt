@@ -126,8 +126,10 @@ fun ItemListScreen(
     }
 
     ToDoAppTheme {
-
-        Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        Scaffold(modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .background(MaterialTheme.colorScheme.surface),
+            containerColor = MaterialTheme.colorScheme.surface,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 Surface(
@@ -165,27 +167,42 @@ fun ItemListScreen(
 
                             ), actions = {
                             if (scrollBehavior.state.collapsedFraction > 0.8) {
-                                IconButton(
-                                    onClick = { itemListViewModel.changeVisible(isVisible.value) },
-                                    Modifier.padding(end = 10.dp)
-                                ) {
-                                    if (isVisible.value) {
+                                Row{
+                                    IconButton(
+                                        onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString) },
+                                        Modifier.padding(end = 10.dp)
+                                    ) {
                                         Icon(
                                             modifier = Modifier.size(30.dp),
-                                            painter = painterResource(id = R.drawable.baseline_visibility_24),
+                                            painter = painterResource(id = R.drawable.baseline_settings_24),
                                             tint = MaterialTheme.colorScheme.tertiary,
-                                            contentDescription = ""
+                                            contentDescription = "Настройки"
                                         )
-                                    } else {
-                                        Icon(
-                                            modifier = Modifier.size(30.dp),
-                                            painter = painterResource(id = R.drawable.baseline_visibility_off_24),
-                                            tint = MaterialTheme.colorScheme.tertiary,
-                                            contentDescription = ""
-                                        )
+                                    }
+                                    IconButton(
+                                        onClick = { itemListViewModel.changeVisible(isVisible.value) },
+                                        Modifier.padding(end = 10.dp)
+                                    ) {
+                                        if (isVisible.value) {
+                                            Icon(
+                                                modifier = Modifier.size(30.dp),
+                                                painter = painterResource(id = R.drawable.baseline_visibility_24),
+                                                tint = MaterialTheme.colorScheme.tertiary,
+                                                contentDescription = ""
+                                            )
+                                        } else {
+                                            Icon(
+                                                modifier = Modifier.size(30.dp),
+                                                painter = painterResource(id = R.drawable.baseline_visibility_off_24),
+                                                tint = MaterialTheme.colorScheme.tertiary,
+                                                contentDescription = ""
+                                            )
+                                        }
+
                                     }
 
                                 }
+
                             }
                         }, scrollBehavior = scrollBehavior
                     )
@@ -233,24 +250,39 @@ fun ItemListScreen(
                                 color = MaterialTheme.colorScheme.onTertiary,
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
-                            IconButton(
-                                onClick = { itemListViewModel.changeVisible(isVisible.value) },
-                                modifier = Modifier.align(Alignment.CenterVertically)
-                            ) {
-                                if (isVisible.value) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                IconButton(
+                                    onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString)},
+                                    Modifier.padding(end = 10.dp)
+                                ){
                                     Icon(
                                         modifier = Modifier.size(30.dp),
-                                        painter = painterResource(id = R.drawable.baseline_visibility_24),
+                                        painter = painterResource(id = R.drawable.baseline_settings_24),
                                         tint = MaterialTheme.colorScheme.tertiary,
-                                        contentDescription = ""
+                                        contentDescription = "Настройки"
                                     )
-                                } else {
-                                    Icon(
-                                        modifier = Modifier.size(30.dp),
-                                        painter = painterResource(id = R.drawable.baseline_visibility_off_24),
-                                        tint = MaterialTheme.colorScheme.tertiary,
-                                        contentDescription = ""
-                                    )
+                                }
+                                IconButton(
+                                    onClick = { itemListViewModel.changeVisible(isVisible.value) },
+                                    modifier = Modifier.align(Alignment.CenterVertically)
+                                ) {
+                                    if (isVisible.value) {
+                                        Icon(
+                                            modifier = Modifier.size(30.dp),
+                                            painter = painterResource(id = R.drawable.baseline_visibility_24),
+                                            tint = MaterialTheme.colorScheme.tertiary,
+                                            contentDescription = ""
+                                        )
+                                    } else {
+                                        Icon(
+                                            modifier = Modifier.size(30.dp),
+                                            painter = painterResource(id = R.drawable.baseline_visibility_off_24),
+                                            tint = MaterialTheme.colorScheme.tertiary,
+                                            contentDescription = ""
+                                        )
+                                    }
                                 }
                             }
                         }

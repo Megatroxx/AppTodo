@@ -9,8 +9,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.apptodo.presentation.ItemListScreen
 import com.example.apptodo.presentation.RedactorScreen
+import com.example.apptodo.presentation.SettingsScreen
 import com.example.apptodo.presentation.viewmodels.ItemListViewModel
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
+import com.example.apptodo.presentation.viewmodels.SettingsViewModel
 
 
 /**
@@ -24,7 +26,7 @@ import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 
 @Composable
 fun AppScreen(
-    navController: NavHostController,
+    navController: NavHostController
 ) {
     val itemListViewModel: ItemListViewModel = hiltViewModel()
     val redactorViewModel: RedactorViewModel = hiltViewModel()
@@ -49,7 +51,13 @@ fun AppScreen(
                     redactorViewModel = redactorViewModel
                 )
             }
-
+            composable(DestinationEnum.SETTINGS_SCREEN.destString) { backStackEntry ->
+                val settingsViewModel: SettingsViewModel = hiltViewModel(backStackEntry)
+                SettingsScreen(
+                    settingsViewModel = settingsViewModel,
+                    navController = navController
+                )
+            }
         }
     }
 }
