@@ -274,29 +274,20 @@ fun RedactorScreen(
                             PrimaryBodyText(
                                 text = stringResource(R.string.importance),
                                 modifier = Modifier.clickable {
-                                    expanded.value = true
+                                    isSheetOpen = true
                                 },
                             )
 
-                            DropdownMenu(
-                                modifier = Modifier.padding(start = 10.dp),
-                                expanded = expanded.value,
-                                onDismissRequest = { expanded.value = false },
-                            ) {
-                                Relevance.entries.forEach { curImportance ->
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            relevance = curImportance
-                                            redactorViewModel.updateRelevance(curImportance)
-                                            expanded.value = false
-                                        },
-                                        text = {
-                                            val relevanceText = when (curImportance) {
-                                                Relevance.LOW -> "Низкая"
-                                                Relevance.BASIC -> "Нет"
-                                                Relevance.IMPORTANT -> "Высокая"
-                                            }
-                                            Text(text = relevanceText)
+                            if (isSheetOpen){
+                                ModalBottomSheet(
+                                    sheetState = bottomSheetState,
+                                    onDismissRequest = { isSheetOpen = false},
+                                    scrimColor = Color.Black.copy(alpha = 0.32f)
+                                ) {
+                                    BottomSheetContent(
+                                        onItemSelected = { selectedRelevance ->
+                                            relevance = selectedRelevance
+                                            redactorViewModel.updateRelevance(selectedRelevance)
                                         }
                                     )
                                 }
@@ -322,7 +313,7 @@ fun RedactorScreen(
                                 else "Нет",
                                 modifier = Modifier
                                     .clickable {
-                                        expanded.value = true
+                                        isSheetOpen = true
                                     },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
@@ -477,20 +468,6 @@ fun RedactorScreen(
                                 )
                         ) {
                             deadline = it.toString()
-                        }
-                    }
-
-
-
-                    if (isSheetOpen){
-                        ModalBottomSheet(
-                            sheetState = bottomSheetState,
-                            onDismissRequest = { isSheetOpen = false},
-                            scrimColor = Color.Black.copy(alpha = 0.32f)
-                        ) {
-                            BottomSheetContent(
-                                onItemSelected = {}
-                            )
                         }
                     }
                 }
