@@ -1,5 +1,8 @@
 package com.example.apptodo.presentation
 
+import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +26,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -34,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,6 +48,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,6 +77,8 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -98,6 +109,11 @@ fun RedactorScreen(
 
     val showLoadingDialog = remember { mutableStateOf(false) }
 
+    val bottomSheetState = rememberModalBottomSheetState()
+    var isSheetOpen by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     BasicAlertDialogCompose(isLoading = showLoadingDialog.value)
 
     LaunchedEffect(uiState) {
@@ -115,6 +131,7 @@ fun RedactorScreen(
     }
 
     val scrollState = rememberScrollState()
+    val sheetState = rememberModalBottomSheetState()
     ToDoAppTheme {
         Box(
             modifier = Modifier
@@ -244,64 +261,92 @@ fun RedactorScreen(
                     )
                     Spacer(modifier = Modifier.padding(vertical = 12.dp))
                     val expanded = remember { mutableStateOf(false) }
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 26.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        PrimaryBodyText(
-                            text = stringResource(R.string.importance),
+                        Column(
                             modifier = Modifier
-                                .clickable {
+                                .weight(1f)
+                                .padding(horizontal = 26.dp)
+                        ) {
+                            PrimaryBodyText(
+                                text = stringResource(R.string.importance),
+                                modifier = Modifier.clickable {
                                     expanded.value = true
                                 },
-
                             )
 
-                        DropdownMenu(
-                            modifier = Modifier.padding(start = 10.dp),
-                            expanded = expanded.value,
-                            onDismissRequest = { expanded.value = false },
-                        ) {
-                            (Relevance.entries.toTypedArray()).forEach { curImportance ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        relevance = curImportance
-                                        redactorViewModel.updateRelevance(curImportance)
-                                        expanded.value = false
-                                    },
-
-                                    text = {
-                                        val relevanceText = when (curImportance) {
-                                            Relevance.LOW -> "Низкая"
-                                            Relevance.BASIC -> "Нет"
-                                            Relevance.IMPORTANT -> "Высокая"
+                            DropdownMenu(
+                                modifier = Modifier.padding(start = 10.dp),
+                                expanded = expanded.value,
+                                onDismissRequest = { expanded.value = false },
+                            ) {
+                                Relevance.entries.forEach { curImportance ->
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            relevance = curImportance
+                                            redactorViewModel.updateRelevance(curImportance)
+                                            expanded.value = false
+                                        },
+                                        text = {
+                                            val relevanceText = when (curImportance) {
+                                                Relevance.LOW -> "Низкая"
+                                                Relevance.BASIC -> "Нет"
+                                                Relevance.IMPORTANT -> "Высокая"
+                                            }
+                                            Text(text = relevanceText)
                                         }
-                                        Text(text = relevanceText)
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
                     }
-                    Text(
-                        text =
-                        if (relevance == Relevance.IMPORTANT) "Высокая"
-                        else if (relevance == Relevance.LOW) "Низкая"
-                        else "Нет",
+                    Column(
                         modifier = Modifier
-                            .padding(horizontal = 26.dp, vertical = 2.dp)
-                            .clickable {
-                                expanded.value = true
-                            },
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
-                        else if (relevance == Relevance.IMPORTANT)
-                        {
-                            MaterialTheme.colorScheme.error
-                        } else {
-                            MaterialTheme.colorScheme.onTertiary
+                            .fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 26.dp)
+                                .padding(bottom = 2.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text =
+                                if (relevance == Relevance.IMPORTANT) "Высокая"
+                                else if (relevance == Relevance.LOW) "Низкая"
+                                else "Нет",
+                                modifier = Modifier
+                                    .clickable {
+                                        expanded.value = true
+                                    },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
+                                else if (relevance == Relevance.IMPORTANT) {
+                                    MaterialTheme.colorScheme.error
+                                } else {
+                                    MaterialTheme.colorScheme.onTertiary
+                                }
+                            )
+
+                            Text(
+                                text = "Выбрать",
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .clickable {
+                                        isSheetOpen = true
+                                    },
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
-                    )
-                    Divider(modifier = Modifier.padding(vertical = 20.dp, horizontal = 26.dp))
+                        Divider(modifier = Modifier.padding(vertical = 5.dp, horizontal = 26.dp))
+
+                    }
                     val deadlineIsSelected =
                         remember { mutableStateOf(currentItem?.deadline != null) }
                     val isChecked = remember { mutableStateOf(currentItem?.deadline != null) }
@@ -434,8 +479,91 @@ fun RedactorScreen(
                             deadline = it.toString()
                         }
                     }
+
+
+
+                    if (isSheetOpen){
+                        ModalBottomSheet(
+                            sheetState = bottomSheetState,
+                            onDismissRequest = { isSheetOpen = false},
+                            scrimColor = Color.Black.copy(alpha = 0.32f)
+                        ) {
+                            BottomSheetContent(
+                                onItemSelected = {}
+                            )
+                        }
+                    }
                 }
+
+
             }
         }
+    }
+}
+
+@Composable
+fun ImportanceItem(relevance: Relevance, onClick: () -> Unit) {
+    val text = when (relevance) {
+        Relevance.BASIC -> "Нет"
+        Relevance.LOW -> "Низкая"
+        Relevance.IMPORTANT -> "Высокая"
+    }
+
+    val defaultBackgroundColor = MaterialTheme.colorScheme.surface
+    val highlightedBackgroundColor = Color.Red
+
+    var isHighlighted by remember { mutableStateOf(false) }
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isHighlighted) highlightedBackgroundColor else defaultBackgroundColor,
+        animationSpec = tween(durationMillis = 1000)
+    )
+
+    val scope = rememberCoroutineScope()
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .clickable {
+                if (relevance == Relevance.IMPORTANT) {
+                    scope.launch {
+                        isHighlighted = true
+                        onClick()
+                        delay(300)
+                        isHighlighted = false
+                    }
+                } else {
+                    onClick()
+                }
+            }
+            .background(backgroundColor)
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(horizontal = 15.dp),
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Divider(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .padding(horizontal = 25.dp)
+        )
+    }
+}
+
+@Composable
+fun BottomSheetContent(onItemSelected: (Relevance) -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        ImportanceItem(relevance = Relevance.BASIC) { onItemSelected(Relevance.BASIC) }
+        ImportanceItem(relevance = Relevance.LOW) { onItemSelected(Relevance.LOW) }
+        ImportanceItem(relevance = Relevance.IMPORTANT) { onItemSelected(Relevance.IMPORTANT) }
     }
 }

@@ -1,12 +1,15 @@
 package com.example.apptodo.presentation.navigation
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import androidx.navigation.navigation
 import com.example.apptodo.presentation.ItemListScreen
 import com.example.apptodo.presentation.RedactorScreen
 import com.example.apptodo.presentation.SettingsScreen
@@ -23,13 +26,14 @@ import com.example.apptodo.presentation.viewmodels.SettingsViewModel
  * @param redactorViewModel The view model for the redactor screen, providing data and logic for editing items.
  */
 
-
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun AppScreen(
     navController: NavHostController
 ) {
     val itemListViewModel: ItemListViewModel = hiltViewModel()
     val redactorViewModel: RedactorViewModel = hiltViewModel()
+
     NavHost(
         navController = navController,
         startDestination = "appScreen",

@@ -1,8 +1,10 @@
 [versions]
+accompanistNavigationAnimation = "0.25.1"
 activityCompose = "1.9.0"
 agp = "8.5.0"
 androidxJunit = "1.2.0"
 androidxWorkRuntimeKtx = "2.7.1"
+animationRuntime = "x.y.z"
 composeBomVersion = "2024.06.00"
 converterGson = "2.11.0"
 converterScalars = "2.9.0"
@@ -33,6 +35,7 @@ material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 navigationCompose = "2.7.7"
+navigationComposeVersion = "2.5.0-alpha06"
 okhttp = "4.9.0"
 recyclerviewswipedecorator = "1.4"
 retrofit = "2.11.0"
@@ -48,8 +51,10 @@ hiltWork = "1.2.0"
 workRuntimeKtxVersion = "2.6.0"
 
 [libraries]
+accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityCompose" }
+androidx-animation-runtime = { module = "androidx.compose.animation:animation-runtime", version.ref = "animationRuntime" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-espresso-core-v360 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
@@ -64,6 +69,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleLivedataKtx" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-navigation-compose-v250alpha06 = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationCompose" }
 androidx-navigation-runtime-ktx = { module = "androidx.navigation:navigation-runtime-ktx", version.ref = "navigationCompose" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }
