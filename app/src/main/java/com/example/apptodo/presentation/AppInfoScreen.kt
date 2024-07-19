@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import com.example.apptodo.R
+import com.example.apptodo.presentation.divkit.NavigationDivActionHandler
 import com.yandex.div.core.Div2Context
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.IOUtils
 import com.yandex.div.DivDataTag
@@ -24,10 +26,11 @@ import org.json.JSONObject
 
 @Composable
 fun AppInfoScreen(
+    navController: NavController
 ) {
     val context = LocalContext.current
     val contextWrapper = remember { ContextThemeWrapper(context, R.style.Theme_ToDoApp) }
-    val configuration = remember { createDivConfiguration(contextWrapper) }
+    val configuration = remember { createDivConfiguration(contextWrapper, navController) }
     val divData = remember { getData(context) }
     AndroidView(
         factory = { context ->
@@ -47,11 +50,10 @@ fun AppInfoScreen(
 }
 
 
-private fun createDivConfiguration(context: Context): DivConfiguration {
+private fun createDivConfiguration(context: Context, navController: NavController): DivConfiguration {
     val imageLoader =  PicassoDivImageLoader(context)
     val configuration = DivConfiguration.Builder(imageLoader)
-/*        .divCustomContainerViewAdapter(RiveCustomViewAdapter.Builder(context, OkHttpDivRiveNetworkDelegate(
-            OkHttpClient.Builder().build())).build())*/
+        .actionHandler(NavigationDivActionHandler(navController))
         .build()
     return configuration
 }
@@ -62,7 +64,6 @@ private fun getData(context: Context): DivData? {
         val jsonObject = JSONObject(data)
         val cardJson = jsonObject.getJSONObject("card")
         val environment = DivParsingEnvironment(ParsingErrorLogger.LOG)
-/*        environment.parseTemplates(jsonObject.getJSONObject("templates"))*/
         DivData(environment, cardJson)
     } catch (e: Exception) {
         e.printStackTrace()

@@ -64,7 +64,7 @@ fun AppScreen(
                 )
             }
             composable(DestinationEnum.APP_INFO_SCREEN.destString){
-                AppInfoScreen()
+                AppInfoScreen(navController = navController)
             }
         }
     }
