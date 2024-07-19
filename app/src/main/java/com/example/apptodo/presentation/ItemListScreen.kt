@@ -170,7 +170,7 @@ fun ItemListScreen(
                                 Row{
                                     IconButton(
                                         onClick = {  navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
-                                        Modifier.padding(end = 10.dp)
+                                        Modifier.padding(end = 2.dp)
                                     ) {
                                         Icon(
                                             modifier = Modifier.size(30.dp),
@@ -181,7 +181,7 @@ fun ItemListScreen(
                                     }
                                     IconButton(
                                         onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString) },
-                                        Modifier.padding(end = 10.dp)
+                                        Modifier.padding(end = 2.dp)
                                     ) {
                                         Icon(
                                             modifier = Modifier.size(30.dp),
@@ -266,7 +266,7 @@ fun ItemListScreen(
                             ){
                                 IconButton(
                                     onClick = { navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
-                                    Modifier.padding(end = 10.dp)
+                                    Modifier.padding(end = 2.dp)
                                 ) {
                                     Icon(
                                         modifier = Modifier.size(30.dp),
@@ -277,7 +277,7 @@ fun ItemListScreen(
                                 }
                                 IconButton(
                                     onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString)},
-                                    Modifier.padding(end = 10.dp)
+                                    Modifier.padding(end = 2.dp)
                                 ){
                                     Icon(
                                         modifier = Modifier.size(30.dp),
