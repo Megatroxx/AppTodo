@@ -95,6 +95,8 @@ dependencies {
     implementation libs.androidx.hilt.common
     implementation libs.androidx.hilt.work
     implementation libs.androidx.work.runtime.ktx.v271
+    implementation libs.androidx.activity
+    implementation libs.firebase.crashlytics.buildtools
     kapt "androidx.room:room-compiler:2.6.1"
     implementation libs.converter.scalars
 
@@ -117,4 +119,15 @@ dependencies {
 
     implementation libs.androidx.hilt.navigation.compose
     implementation libs.androidx.activity.ktx
+
+    //DivKit
+    implementation libs.div.core
+    implementation libs.div
+    implementation libs.div.json
+/*    implementation libs.div.utils*/
+    implementation libs.glide
+    implementation libs.picasso
+    implementation libs.div.picasso
+    implementation libs.div.glide
+
 }

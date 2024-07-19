@@ -169,6 +169,17 @@ fun ItemListScreen(
                             if (scrollBehavior.state.collapsedFraction > 0.8) {
                                 Row{
                                     IconButton(
+                                        onClick = {  navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
+                                        Modifier.padding(end = 10.dp)
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier.size(30.dp),
+                                            painter = painterResource(id = R.drawable.baseline_info_outline_24),
+                                            tint = MaterialTheme.colorScheme.tertiary,
+                                            contentDescription = "Информация"
+                                        )
+                                    }
+                                    IconButton(
                                         onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString) },
                                         Modifier.padding(end = 10.dp)
                                     ) {
@@ -253,6 +264,17 @@ fun ItemListScreen(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ){
+                                IconButton(
+                                    onClick = { navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
+                                    Modifier.padding(end = 10.dp)
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(30.dp),
+                                        painter = painterResource(id = R.drawable.baseline_info_outline_24),
+                                        tint = MaterialTheme.colorScheme.tertiary,
+                                        contentDescription = "Информация"
+                                    )
+                                }
                                 IconButton(
                                     onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString)},
                                     Modifier.padding(end = 10.dp)

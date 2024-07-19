@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.apptodo.presentation.AppInfoScreen
 import com.example.apptodo.presentation.ItemListScreen
 import com.example.apptodo.presentation.RedactorScreen
 import com.example.apptodo.presentation.SettingsScreen
@@ -61,6 +62,9 @@ fun AppScreen(
                     settingsViewModel = settingsViewModel,
                     navController = navController
                 )
+            }
+            composable(DestinationEnum.APP_INFO_SCREEN.destString){
+                AppInfoScreen()
             }
         }
     }
