@@ -125,147 +125,51 @@ fun ItemListScreen(
         }
     }
 
-    ToDoAppTheme {
-        Scaffold(modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .background(MaterialTheme.colorScheme.surface),
-            containerColor = MaterialTheme.colorScheme.surface,
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(
-                            elevation = if (scrollBehavior.state.collapsedFraction > 0.5) 6.dp else 0.dp,
-                            shape = RoundedCornerShape(0.dp)
-                        )
-                ) {
-                    LargeTopAppBar(
-                        title = {
-                            Column {
-                                if (scrollBehavior.state.collapsedFraction < 0.5) {
-                                    Text(
-                                        text = stringResource(R.string.my_items),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        modifier = Modifier.padding(start = 26.dp)
-                                    )
-                                } else {
-                                    Text(
-                                        stringResource(R.string.my_items),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        modifier = Modifier.padding(start = 26.dp)
-                                    )
-                                }
-
-                            }
-                        }, colors = TopAppBarDefaults.mediumTopAppBarColors(
-                            titleContentColor = MaterialTheme.colorScheme.onPrimary,
-
-                            ), actions = {
-                            if (scrollBehavior.state.collapsedFraction > 0.8) {
-                                Row{
-                                    IconButton(
-                                        onClick = {  navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
-                                        Modifier.padding(end = 2.dp)
-                                    ) {
-                                        Icon(
-                                            modifier = Modifier.size(30.dp),
-                                            painter = painterResource(id = R.drawable.baseline_info_outline_24),
-                                            tint = MaterialTheme.colorScheme.tertiary,
-                                            contentDescription = "Информация"
-                                        )
-                                    }
-                                    IconButton(
-                                        onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString) },
-                                        Modifier.padding(end = 2.dp)
-                                    ) {
-                                        Icon(
-                                            modifier = Modifier.size(30.dp),
-                                            painter = painterResource(id = R.drawable.baseline_settings_24),
-                                            tint = MaterialTheme.colorScheme.tertiary,
-                                            contentDescription = "Настройки"
-                                        )
-                                    }
-                                    IconButton(
-                                        onClick = { itemListViewModel.changeVisible(isVisible.value) },
-                                        Modifier.padding(end = 10.dp)
-                                    ) {
-                                        if (isVisible.value) {
-                                            Icon(
-                                                modifier = Modifier.size(30.dp),
-                                                painter = painterResource(id = R.drawable.baseline_visibility_24),
-                                                tint = MaterialTheme.colorScheme.tertiary,
-                                                contentDescription = ""
-                                            )
-                                        } else {
-                                            Icon(
-                                                modifier = Modifier.size(30.dp),
-                                                painter = painterResource(id = R.drawable.baseline_visibility_off_24),
-                                                tint = MaterialTheme.colorScheme.tertiary,
-                                                contentDescription = ""
-                                            )
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-                        }, scrollBehavior = scrollBehavior
-                    )
-                }
-            },
-            floatingActionButton = {
-                FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.tertiary, onClick = {
-                        redactorViewModel.clearItem()
-                        navController.navigate(DestinationEnum.REDACTOR_SCREEN.destString)
-                    }, shape = CircleShape, modifier = Modifier.padding(bottom = 18.dp, end = 18.dp)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.baseline_add_24),
-                        contentDescription = stringResource(R.string.add_new_task),
-                        colorFilter = ColorFilter.tint(Color.White)
-                    )
-                }
-            }
-
-        ) { innerPadding ->
-            LazyColumn(
-                contentPadding = innerPadding,
+/*    ToDoAppTheme {*/
+    Scaffold(modifier = Modifier
+        .nestedScroll(scrollBehavior.nestedScrollConnection)
+        .background(MaterialTheme.colorScheme.surface),
+        containerColor = MaterialTheme.colorScheme.surface,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp)
-                    ),
+                    .shadow(
+                        elevation = if (scrollBehavior.state.collapsedFraction > 0.5) 6.dp else 0.dp,
+                        shape = RoundedCornerShape(0.dp)
+                    )
             ) {
-                item {
-                    AnimatedVisibility(
-                        visible = scrollBehavior.state.collapsedFraction < 0.5,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 44.dp, end = 34.dp, bottom = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-                            Text(
-                                text = "${stringResource(R.string.done)} ${doneCounter.value}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onTertiary,
-                                modifier = Modifier.align(Alignment.CenterVertically)
-                            )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
+                LargeTopAppBar(
+                    title = {
+                        Column {
+                            if (scrollBehavior.state.collapsedFraction < 0.5) {
+                                Text(
+                                    text = stringResource(R.string.my_items),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    modifier = Modifier.padding(start = 26.dp)
+                                )
+                            } else {
+                                Text(
+                                    stringResource(R.string.my_items),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(start = 26.dp)
+                                )
+                            }
+
+                        }
+                    }, colors = TopAppBarDefaults.mediumTopAppBarColors(
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+
+                        ), actions = {
+                        if (scrollBehavior.state.collapsedFraction > 0.8) {
+                            Row{
                                 IconButton(
-                                    onClick = { navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
+                                    onClick = {  navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
                                     Modifier.padding(end = 2.dp)
                                 ) {
                                     Icon(
@@ -276,9 +180,9 @@ fun ItemListScreen(
                                     )
                                 }
                                 IconButton(
-                                    onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString)},
+                                    onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString) },
                                     Modifier.padding(end = 2.dp)
-                                ){
+                                ) {
                                     Icon(
                                         modifier = Modifier.size(30.dp),
                                         painter = painterResource(id = R.drawable.baseline_settings_24),
@@ -288,7 +192,7 @@ fun ItemListScreen(
                                 }
                                 IconButton(
                                     onClick = { itemListViewModel.changeVisible(isVisible.value) },
-                                    modifier = Modifier.align(Alignment.CenterVertically)
+                                    Modifier.padding(end = 10.dp)
                                 ) {
                                     if (isVisible.value) {
                                         Icon(
@@ -305,65 +209,160 @@ fun ItemListScreen(
                                             contentDescription = ""
                                         )
                                     }
+
+                                }
+
+                            }
+
+                        }
+                    }, scrollBehavior = scrollBehavior
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.tertiary, onClick = {
+                    redactorViewModel.clearItem()
+                    navController.navigate(DestinationEnum.REDACTOR_SCREEN.destString)
+                }, shape = CircleShape, modifier = Modifier.padding(bottom = 18.dp, end = 18.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.baseline_add_24),
+                    contentDescription = stringResource(R.string.add_new_task),
+                    colorFilter = ColorFilter.tint(Color.White)
+                )
+            }
+        }
+
+    ) { innerPadding ->
+        LazyColumn(
+            contentPadding = innerPadding,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp)
+                ),
+        ) {
+            item {
+                AnimatedVisibility(
+                    visible = scrollBehavior.state.collapsedFraction < 0.5,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 44.dp, end = 34.dp, bottom = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Text(
+                            text = "${stringResource(R.string.done)} ${doneCounter.value}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            IconButton(
+                                onClick = { navController.navigate(DestinationEnum.APP_INFO_SCREEN.destString)},
+                                Modifier.padding(end = 2.dp)
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(30.dp),
+                                    painter = painterResource(id = R.drawable.baseline_info_outline_24),
+                                    tint = MaterialTheme.colorScheme.tertiary,
+                                    contentDescription = "Информация"
+                                )
+                            }
+                            IconButton(
+                                onClick = { navController.navigate(DestinationEnum.SETTINGS_SCREEN.destString)},
+                                Modifier.padding(end = 2.dp)
+                            ){
+                                Icon(
+                                    modifier = Modifier.size(30.dp),
+                                    painter = painterResource(id = R.drawable.baseline_settings_24),
+                                    tint = MaterialTheme.colorScheme.tertiary,
+                                    contentDescription = "Настройки"
+                                )
+                            }
+                            IconButton(
+                                onClick = { itemListViewModel.changeVisible(isVisible.value) },
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            ) {
+                                if (isVisible.value) {
+                                    Icon(
+                                        modifier = Modifier.size(30.dp),
+                                        painter = painterResource(id = R.drawable.baseline_visibility_24),
+                                        tint = MaterialTheme.colorScheme.tertiary,
+                                        contentDescription = ""
+                                    )
+                                } else {
+                                    Icon(
+                                        modifier = Modifier.size(30.dp),
+                                        painter = painterResource(id = R.drawable.baseline_visibility_off_24),
+                                        tint = MaterialTheme.colorScheme.tertiary,
+                                        contentDescription = ""
+                                    )
                                 }
                             }
                         }
                     }
                 }
+            }
 
-                item {
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, top = 20.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.background,
-                                shape = RoundedCornerShape(
-                                    topStart = 12.dp,
-                                    topEnd = 12.dp,
-                                    bottomStart = 0.dp,
-                                    bottomEnd = 0.dp
-                                )
+            item {
+                Column(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 20.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(
+                                topStart = 12.dp,
+                                topEnd = 12.dp,
+                                bottomStart = 0.dp,
+                                bottomEnd = 0.dp
                             )
-                    ) {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 6.dp)
                         )
-                    }
-                }
-                items(todoList) { item ->
-                    TodoItem(todoItem = item, itemListViewModel = itemListViewModel, onCardClick = {
-                        redactorViewModel.setItem(item)
-                        navController.navigate(DestinationEnum.REDACTOR_SCREEN.destString)
-                    })
-                }
-
-                item {
-                    Text(
-                        text = stringResource(R.string.new_),
+                ) {
+                    Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 30.dp)
-                            .Shadow(offsetY = 2.5.dp, blurRadius = 2.5.dp, borderRadius = 10.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.background,
-                                shape = RoundedCornerShape(
-                                    topStart = 0.dp,
-                                    topEnd = 0.dp,
-                                    bottomStart = 12.dp,
-                                    bottomEnd = 12.dp
-                                )
-                            )
-                            .padding(bottom = 20.dp, start = 48.dp, top = 18.dp)
-                            .clickable {
-                                redactorViewModel.clearItem()
-                                navController.navigate(DestinationEnum.REDACTOR_SCREEN.destString)
-                            },
-                        color = MaterialTheme.colorScheme.onTertiary,
-                        style = MaterialTheme.typography.bodyMedium
+                            .padding(vertical = 6.dp)
                     )
                 }
+            }
+            items(todoList) { item ->
+                TodoItem(todoItem = item, itemListViewModel = itemListViewModel, onCardClick = {
+                    redactorViewModel.setItem(item)
+                    navController.navigate(DestinationEnum.REDACTOR_SCREEN.destString)
+                })
+            }
+
+            item {
+                Text(
+                    text = stringResource(R.string.new_),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 30.dp)
+                        .Shadow(offsetY = 2.5.dp, blurRadius = 2.5.dp, borderRadius = 10.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(
+                                topStart = 0.dp,
+                                topEnd = 0.dp,
+                                bottomStart = 12.dp,
+                                bottomEnd = 12.dp
+                            )
+                        )
+                        .padding(bottom = 20.dp, start = 48.dp, top = 18.dp)
+                        .clickable {
+                            redactorViewModel.clearItem()
+                            navController.navigate(DestinationEnum.REDACTOR_SCREEN.destString)
+                        },
+                    color = MaterialTheme.colorScheme.onTertiary,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }

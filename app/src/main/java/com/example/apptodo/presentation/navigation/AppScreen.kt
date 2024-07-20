@@ -30,7 +30,8 @@ import com.example.apptodo.presentation.viewmodels.SettingsViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun AppScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    settingsViewModel: SettingsViewModel
 ) {
     val itemListViewModel: ItemListViewModel = hiltViewModel()
     val redactorViewModel: RedactorViewModel = hiltViewModel()
@@ -57,7 +58,7 @@ fun AppScreen(
                 )
             }
             composable(DestinationEnum.SETTINGS_SCREEN.destString) { backStackEntry ->
-                val settingsViewModel: SettingsViewModel = hiltViewModel(backStackEntry)
+/*                val settingsViewModel: SettingsViewModel = hiltViewModel(backStackEntry)*/
                 SettingsScreen(
                     settingsViewModel = settingsViewModel,
                     navController = navController

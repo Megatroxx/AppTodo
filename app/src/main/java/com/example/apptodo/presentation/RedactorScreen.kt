@@ -132,348 +132,347 @@ fun RedactorScreen(
 
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState()
-    ToDoAppTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
-        ){
-            Scaffold(
-                snackbarHost = { SnackbarHost(snackbarHostState) },
-                containerColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                topBar = {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .shadow(
-                                elevation = if (scrollState.value > 0) 6.dp else 0.dp,
-                                shape = RoundedCornerShape(0.dp)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ){
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+            topBar = {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = if (scrollState.value > 0) 6.dp else 0.dp,
+                            shape = RoundedCornerShape(0.dp)
+                        )
+                        .background(MaterialTheme.colorScheme.surface)
+                ) {
+                    TopAppBar(
+                        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                        navigationIcon = {
+                            Image(
+                                painter = painterResource(R.drawable.baseline_close_24),
+                                contentDescription = stringResource(R.string.delete_task),
+                                modifier = Modifier
+                                    .padding(start = 26.dp, top = 6.dp)
+                                    .clickable {
+                                        redactorViewModel.clearItem()
+                                        navController.navigate(DestinationEnum.LIST_SCREEN.destString)
+                                    },
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
                             )
-                            .background(MaterialTheme.colorScheme.surface)
+                        },
+                        title = {},
+                        colors = TopAppBarDefaults.mediumTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ),
+                        actions = {
+                            var isClicked by remember { mutableStateOf(false) }
+                            Text(
+                                text = stringResource(R.string.save),
+                                modifier = Modifier
+                                    .padding(end = 26.dp, top = 6.dp)
+                                    .clickable {
+                                        isClicked = true
+                                        val newTodoItem = currentItem?.copy(
+                                            text = textValue,
+                                            relevance = relevance,
+                                            deadline = if (deadline != "") deadline else null,
+                                            changeDate = LocalDate
+                                                .now()
+                                                .toString()
+                                        ) ?: TodoItem(
+                                            id = UUID
+                                                .randomUUID()
+                                                .toString(),
+                                            text = textValue,
+                                            relevance = relevance,
+                                            deadline = deadline,
+                                            flagAchievement = false,
+                                            creationDate = LocalDate
+                                                .now()
+                                                .toString(),
+                                            changeDate = LocalDate
+                                                .now()
+                                                .toString()
+                                        )
+
+                                        redactorViewModel.setItem(newTodoItem)
+                                        redactorViewModel.saveItem(newTodoItem)
+                                        navController.navigate(DestinationEnum.LIST_SCREEN.destString)
+                                    },
+                                color = if (!isClicked) MaterialTheme.colorScheme.tertiary else Color.Green,
+                            )
+
+                        },
+                    )
+
+                }
+
+            },
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(scrollState)
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                Spacer(modifier = Modifier.padding(vertical = 8.dp))
+                OutlinedTextField(
+                    value = textValue.orEmpty(),
+                    onValueChange = { newValue ->
+                        textValue = newValue
+                        currentItem?.let { item ->
+                            redactorViewModel.updateText(newValue)
+                        }
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(150.dp, 1000.dp)
+                        .padding(horizontal = 22.dp)
+                        .shadow(2.dp, shape = RoundedCornerShape(12.dp), clip = false)
+                        .padding(2.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(12.dp)
+                        ),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        disabledTextColor = MaterialTheme.colorScheme.background,
+                        focusedBorderColor = MaterialTheme.colorScheme.background,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.background,
+                        disabledBorderColor = MaterialTheme.colorScheme.background,
+                        cursorColor = MaterialTheme.colorScheme.outlineVariant,
+
+                        ),
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.what_needs_to_be_done),
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                )
+                Spacer(modifier = Modifier.padding(vertical = 12.dp))
+                val expanded = remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 26.dp)
                     ) {
-                        TopAppBar(
-                            scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-                            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                            navigationIcon = {
-                                Image(
-                                    painter = painterResource(R.drawable.baseline_close_24),
-                                    contentDescription = stringResource(R.string.delete_task),
-                                    modifier = Modifier
-                                        .padding(start = 26.dp, top = 6.dp)
-                                        .clickable {
-                                            redactorViewModel.clearItem()
-                                            navController.navigate(DestinationEnum.LIST_SCREEN.destString)
-                                        },
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-                                )
-                            },
-                            title = {},
-                            colors = TopAppBarDefaults.mediumTopAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                            ),
-                            actions = {
-                                var isClicked by remember { mutableStateOf(false) }
-                                Text(
-                                    text = stringResource(R.string.save),
-                                    modifier = Modifier
-                                        .padding(end = 26.dp, top = 6.dp)
-                                        .clickable {
-                                            isClicked = true
-                                            val newTodoItem = currentItem?.copy(
-                                                text = textValue,
-                                                relevance = relevance,
-                                                deadline = if (deadline != "") deadline else null,
-                                                changeDate = LocalDate
-                                                    .now()
-                                                    .toString()
-                                            ) ?: TodoItem(
-                                                id = UUID
-                                                    .randomUUID()
-                                                    .toString(),
-                                                text = textValue,
-                                                relevance = relevance,
-                                                deadline = deadline,
-                                                flagAchievement = false,
-                                                creationDate = LocalDate
-                                                    .now()
-                                                    .toString(),
-                                                changeDate = LocalDate
-                                                    .now()
-                                                    .toString()
-                                            )
-
-                                            redactorViewModel.setItem(newTodoItem)
-                                            redactorViewModel.saveItem(newTodoItem)
-                                            navController.navigate(DestinationEnum.LIST_SCREEN.destString)
-                                        },
-                                    color = if (!isClicked) MaterialTheme.colorScheme.tertiary else Color.Green,
-                                )
-
+                        PrimaryBodyText(
+                            text = stringResource(R.string.importance),
+                            modifier = Modifier.clickable {
+                                isSheetOpen = true
                             },
                         )
 
-                    }
-
-                },
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .verticalScroll(scrollState)
-                        .background(MaterialTheme.colorScheme.surface)
-                ) {
-                    Spacer(modifier = Modifier.padding(vertical = 8.dp))
-                    OutlinedTextField(
-                        value = textValue.orEmpty(),
-                        onValueChange = { newValue ->
-                            textValue = newValue
-                            currentItem?.let { item ->
-                                redactorViewModel.updateText(newValue)
-                            }
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(150.dp, 1000.dp)
-                            .padding(horizontal = 22.dp)
-                            .shadow(2.dp, shape = RoundedCornerShape(12.dp), clip = false)
-                            .padding(2.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.background,
-                                shape = RoundedCornerShape(12.dp)
-                            ),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            disabledTextColor = MaterialTheme.colorScheme.background,
-                            focusedBorderColor = MaterialTheme.colorScheme.background,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                            disabledBorderColor = MaterialTheme.colorScheme.background,
-                            cursorColor = MaterialTheme.colorScheme.outlineVariant,
-
-                            ),
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.what_needs_to_be_done),
-                                color = MaterialTheme.colorScheme.onTertiary,
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
-                    )
-                    Spacer(modifier = Modifier.padding(vertical = 12.dp))
-                    val expanded = remember { mutableStateOf(false) }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 26.dp)
-                        ) {
-                            PrimaryBodyText(
-                                text = stringResource(R.string.importance),
-                                modifier = Modifier.clickable {
-                                    isSheetOpen = true
-                                },
-                            )
-
-                            if (isSheetOpen){
-                                ModalBottomSheet(
-                                    sheetState = bottomSheetState,
-                                    onDismissRequest = { isSheetOpen = false},
-                                    scrimColor = Color.Black.copy(alpha = 0.32f)
-                                ) {
-                                    BottomSheetContent(
-                                        onItemSelected = { selectedRelevance ->
-                                            relevance = selectedRelevance
-                                            redactorViewModel.updateRelevance(selectedRelevance)
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 26.dp)
-                                .padding(bottom = 2.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text =
-                                if (relevance == Relevance.IMPORTANT) "Высокая"
-                                else if (relevance == Relevance.LOW) "Низкая"
-                                else "Нет",
-                                modifier = Modifier
-                                    .clickable {
-                                        isSheetOpen = true
-                                    },
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
-                                else if (relevance == Relevance.IMPORTANT) {
-                                    MaterialTheme.colorScheme.error
-                                } else {
-                                    MaterialTheme.colorScheme.onTertiary
-                                }
-                            )
-
-                            Text(
-                                text = "Выбрать",
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .clickable {
-                                        isSheetOpen = true
-                                    },
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(vertical = 5.dp, horizontal = 26.dp))
-
-                    }
-                    val deadlineIsSelected =
-                        remember { mutableStateOf(currentItem?.deadline != null) }
-                    val isChecked = remember { mutableStateOf(currentItem?.deadline != null) }
-                    val formattedDate = remember(deadline) {
-                        derivedStateOf {
-                            if (deadline.isNotEmpty()) {
-                                try {
-                                    val localDate = LocalDate.parse(deadline)
-                                    DateTimeFormatter.ofPattern("MMM dd yyyy").format(localDate)
-                                } catch (e: DateTimeParseException) {
-                                    "Invalid date"
-                                }
-                            } else {
-                                "No deadline"
-                            }
-                        }
-                    }
-                    val dateDialogState = rememberMaterialDialogState()
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 26.dp)
-                        ) {
-                            PrimaryBodyText(
-                                text = "Сделать до",
-                                modifier = Modifier.clickable {
-                                    dateDialogState.show()
-                                }
-                            )
-                            if (deadlineIsSelected.value && isChecked.value) {
-                                Text(
-                                    text = formattedDate.value,
-                                    color = MaterialTheme.colorScheme.tertiary,
-                                    modifier = Modifier.clickable {
-                                        dateDialogState.show()
+                        if (isSheetOpen){
+                            ModalBottomSheet(
+                                sheetState = bottomSheetState,
+                                onDismissRequest = { isSheetOpen = false},
+                                scrimColor = Color.Black.copy(alpha = 0.32f)
+                            ) {
+                                BottomSheetContent(
+                                    onItemSelected = { selectedRelevance ->
+                                        relevance = selectedRelevance
+                                        redactorViewModel.updateRelevance(selectedRelevance)
                                     }
                                 )
                             }
                         }
-                        Switch(
-                            modifier = Modifier.padding(end = 40.dp),
-                            checked = isChecked.value,
-                            onCheckedChange = {
-                                isChecked.value = !isChecked.value
-                                if (isChecked.value) {
-                                    dateDialogState.show()
-                                }
-                                else {
-                                    deadline = ""
-                                    redactorViewModel.updateDeadline(null)
-                                }
-                            },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = MaterialTheme.colorScheme.tertiary,
-                                uncheckedThumbColor = MaterialTheme.colorScheme.outlineVariant
-                            )
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 26.dp)
+                            .padding(bottom = 2.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text =
+                            if (relevance == Relevance.IMPORTANT) "Высокая"
+                            else if (relevance == Relevance.LOW) "Низкая"
+                            else "Нет",
+                            modifier = Modifier
+                                .clickable {
+                                    isSheetOpen = true
+                                },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
+                            else if (relevance == Relevance.IMPORTANT) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.onTertiary
+                            }
+                        )
+
+                        Text(
+                            text = "Выбрать",
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .clickable {
+                                    isSheetOpen = true
+                                },
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
-                    Spacer(modifier = Modifier.padding(vertical = 10.dp))
-                    Divider(modifier = Modifier.padding(vertical = 10.dp, horizontal = 26.dp))
-                    var buttonState by remember { mutableStateOf(false) }
+                    Divider(modifier = Modifier.padding(vertical = 5.dp, horizontal = 26.dp))
 
-                    Button(
-                        onClick = {
-                            buttonState = !buttonState
-                            if (currentItem != null) {
-                                redactorViewModel.deleteItem()
+                }
+                val deadlineIsSelected =
+                    remember { mutableStateOf(currentItem?.deadline != null) }
+                val isChecked = remember { mutableStateOf(currentItem?.deadline != null) }
+                val formattedDate = remember(deadline) {
+                    derivedStateOf {
+                        if (deadline.isNotEmpty()) {
+                            try {
+                                val localDate = LocalDate.parse(deadline)
+                                DateTimeFormatter.ofPattern("MMM dd yyyy").format(localDate)
+                            } catch (e: DateTimeParseException) {
+                                "Invalid date"
                             }
-                            navController.navigateUp()
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (buttonState) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.background,
-                            contentColor = if (buttonState) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.error
-                        ),
-                        modifier = Modifier
-                            .padding(top = 20.dp, start = 26.dp, bottom = 70.dp)
-                            .size(width = 210.dp, height = 50.dp)
-                            .shadow(elevation = 2.dp, shape = RoundedCornerShape(percent = 50))
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(R.drawable.baseline_delete_24),
-                                contentDescription = stringResource(R.string.delete_task),
-                                modifier = Modifier
-                                    .padding(end = 8.dp)
-                                    .size(24.dp),
-                                colorFilter = ColorFilter.tint(if (buttonState) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.error)
-                            )
-                            Text(
-                                text = stringResource(R.string.delete_task),
-                                color = if (buttonState) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
-                    }
-                    MaterialDialog(
-                        dialogState = dateDialogState,
-                        buttons = {
-                            positiveButton(
-                                text = stringResource(R.string.ready),
-                                textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary)
-                            ) {
-                                deadlineIsSelected.value = true
-                            }
-                            negativeButton(
-                                text = stringResource(R.string.cancel),
-                                textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary)
-                            ) {
-                                if (!deadlineIsSelected.value) {
-                                    isChecked.value = false
-                                }
-                            }
-                        }
-                    ) {
-                        datepicker(
-                            initialDate = LocalDate.now(),
-                            title = DateTimeFormatter
-                                .ofPattern("  yyyy")
-                                .format(LocalDate.now()),
-                            colors = DatePickerDefaults.colors(
-                                headerBackgroundColor = MaterialTheme.colorScheme.tertiary,
-                                dateActiveBackgroundColor = MaterialTheme.colorScheme.tertiary,
-
-                                )
-                        ) {
-                            deadline = it.toString()
+                        } else {
+                            "No deadline"
                         }
                     }
                 }
+                val dateDialogState = rememberMaterialDialogState()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 26.dp)
+                    ) {
+                        PrimaryBodyText(
+                            text = "Сделать до",
+                            modifier = Modifier.clickable {
+                                dateDialogState.show()
+                            }
+                        )
+                        if (deadlineIsSelected.value && isChecked.value) {
+                            Text(
+                                text = formattedDate.value,
+                                color = MaterialTheme.colorScheme.tertiary,
+                                modifier = Modifier.clickable {
+                                    dateDialogState.show()
+                                }
+                            )
+                        }
+                    }
+                    Switch(
+                        modifier = Modifier.padding(end = 40.dp),
+                        checked = isChecked.value,
+                        onCheckedChange = {
+                            isChecked.value = !isChecked.value
+                            if (isChecked.value) {
+                                dateDialogState.show()
+                            }
+                            else {
+                                deadline = ""
+                                redactorViewModel.updateDeadline(null)
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.tertiary,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.outlineVariant
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                Divider(modifier = Modifier.padding(vertical = 10.dp, horizontal = 26.dp))
+                var buttonState by remember { mutableStateOf(false) }
 
+                Button(
+                    onClick = {
+                        buttonState = !buttonState
+                        if (currentItem != null) {
+                            redactorViewModel.deleteItem()
+                        }
+                        navController.navigateUp()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (buttonState) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.background,
+                        contentColor = if (buttonState) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.error
+                    ),
+                    modifier = Modifier
+                        .padding(top = 20.dp, start = 26.dp, bottom = 70.dp)
+                        .size(width = 210.dp, height = 50.dp)
+                        .shadow(elevation = 2.dp, shape = RoundedCornerShape(percent = 50))
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.baseline_delete_24),
+                            contentDescription = stringResource(R.string.delete_task),
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .size(24.dp),
+                            colorFilter = ColorFilter.tint(if (buttonState) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.error)
+                        )
+                        Text(
+                            text = stringResource(R.string.delete_task),
+                            color = if (buttonState) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+                MaterialDialog(
+                    dialogState = dateDialogState,
+                    buttons = {
+                        positiveButton(
+                            text = stringResource(R.string.ready),
+                            textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary)
+                        ) {
+                            deadlineIsSelected.value = true
+                        }
+                        negativeButton(
+                            text = stringResource(R.string.cancel),
+                            textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary)
+                        ) {
+                            if (!deadlineIsSelected.value) {
+                                isChecked.value = false
+                            }
+                        }
+                    }
+                ) {
+                    datepicker(
+                        initialDate = LocalDate.now(),
+                        title = DateTimeFormatter
+                            .ofPattern("  yyyy")
+                            .format(LocalDate.now()),
+                        colors = DatePickerDefaults.colors(
+                            headerBackgroundColor = MaterialTheme.colorScheme.tertiary,
+                            dateActiveBackgroundColor = MaterialTheme.colorScheme.tertiary,
 
+                            )
+                    ) {
+                        deadline = it.toString()
+                    }
+                }
             }
+
+
         }
     }
 }

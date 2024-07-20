@@ -47,96 +47,91 @@ fun TodoItem(
     itemListViewModel: ItemListViewModel,
     onCardClick: () -> Unit,
 ) {
+    val checkedState by rememberUpdatedState(newValue = todoItem.flagAchievement)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .Shadow(offsetY = 3.dp, blurRadius = 2.5.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .padding(top = 4.dp, end = 6.dp)
+            .clickable {
+                onCardClick()
+            },
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Checkbox(
 
-    ToDoAppTheme {
-
-        val checkedState by rememberUpdatedState(newValue = todoItem.flagAchievement)
-        Row(
+            checked = todoItem.flagAchievement,
+            onCheckedChange = {
+                itemListViewModel.checkItem(todoItem, it)
+            },
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.scrim,
+                uncheckedColor =
+                if (todoItem.relevance == Relevance.IMPORTANT) MaterialTheme.colorScheme.error
+                else MaterialTheme.colorScheme.onTertiary,
+                checkmarkColor = MaterialTheme.colorScheme.surface,
+                disabledCheckedColor = MaterialTheme.colorScheme.scrim,
+                disabledUncheckedColor = if (todoItem.relevance == Relevance.IMPORTANT) MaterialTheme.colorScheme.error
+                else MaterialTheme.colorScheme.onTertiary,
+            ),
+        )
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .Shadow(offsetY = 3.dp, blurRadius = 2.5.dp)
-                .background(MaterialTheme.colorScheme.background)
-                .padding(top = 4.dp, end = 6.dp)
-                .clickable {
-                    onCardClick()
-                },
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .weight(1f)
+                .padding(top = 10.dp)
         ) {
-            Checkbox(
-
-                checked = todoItem.flagAchievement,
-                onCheckedChange = {
-                    itemListViewModel.checkItem(todoItem, it)
-                },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.scrim,
-                    uncheckedColor =
-                    if (todoItem.relevance == Relevance.IMPORTANT) MaterialTheme.colorScheme.error
-                    else MaterialTheme.colorScheme.onTertiary,
-                    checkmarkColor = MaterialTheme.colorScheme.surface,
-                    disabledCheckedColor = MaterialTheme.colorScheme.scrim,
-                    disabledUncheckedColor = if (todoItem.relevance == Relevance.IMPORTANT) MaterialTheme.colorScheme.error
-                    else MaterialTheme.colorScheme.onTertiary,
-                ),
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(top = 10.dp)
-            ) {
-                Box {
-                    var itemText = todoItem.text
-                    if (!checkedState && todoItem.relevance == Relevance.IMPORTANT) {
-                        Image(
-                            painter = painterResource(R.drawable.hug),
-                            contentDescription = stringResource(R.string.task_has_status_high),
-                            modifier = Modifier
-                                .padding(top = 4.dp),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error)
-                        )
-                        itemText = "    $itemText"
-                    } else if (!checkedState && todoItem.relevance == Relevance.LOW) {
-                        Image(
-                            painter = painterResource(R.drawable.low),
-                            contentDescription = stringResource(R.string.task_has_status_low),
-                            modifier = Modifier
-                                .padding(top = 4.dp),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.outlineVariant)
-                        )
-                        itemText = "     $itemText"
-                    }
-                    Text(
-                        text = itemText,
+            Box {
+                var itemText = todoItem.text
+                if (!checkedState && todoItem.relevance == Relevance.IMPORTANT) {
+                    Image(
+                        painter = painterResource(R.drawable.hug),
+                        contentDescription = stringResource(R.string.task_has_status_high),
                         modifier = Modifier
-                            .padding(top = 2.dp),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        textDecoration = if (checkedState) TextDecoration.LineThrough
-                        else TextDecoration.None,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = if (checkedState) MaterialTheme.colorScheme.onTertiary
-                        else MaterialTheme.colorScheme.onPrimary,
+                            .padding(top = 4.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error)
                     )
-                }
-                Spacer(modifier = Modifier.padding(vertical = 2.dp))
-                todoItem.deadline?.let {
-                    Text(
-                        text = it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onTertiary
+                    itemText = "    $itemText"
+                } else if (!checkedState && todoItem.relevance == Relevance.LOW) {
+                    Image(
+                        painter = painterResource(R.drawable.low),
+                        contentDescription = stringResource(R.string.task_has_status_low),
+                        modifier = Modifier
+                            .padding(top = 4.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.outlineVariant)
                     )
+                    itemText = "     $itemText"
                 }
+                Text(
+                    text = itemText,
+                    modifier = Modifier
+                        .padding(top = 2.dp),
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                    textDecoration = if (checkedState) TextDecoration.LineThrough
+                    else TextDecoration.None,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (checkedState) MaterialTheme.colorScheme.onTertiary
+                    else MaterialTheme.colorScheme.onPrimary,
+                )
             }
-            Image(
-                painter = painterResource(R.drawable.info),
-                contentDescription = stringResource(R.string.show_information),
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 10.dp, top = 12.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary)
-            )
+            Spacer(modifier = Modifier.padding(vertical = 2.dp))
+            todoItem.deadline?.let {
+                Text(
+                    text = it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onTertiary
+                )
+            }
         }
-
+        Image(
+            painter = painterResource(R.drawable.info),
+            contentDescription = stringResource(R.string.show_information),
+            modifier = Modifier
+                .padding(start = 8.dp, end = 10.dp, top = 12.dp),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary)
+        )
     }
 
 }

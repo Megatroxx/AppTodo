@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,9 +19,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.apptodo.presentation.ThemeOption
 import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
 import com.example.apptodo.presentation.navigation.AppScreen
-import com.example.apptodo.presentation.ui.theme.LocalThemeOption
 import com.example.apptodo.presentation.viewmodels.ItemListViewModel
 import com.example.apptodo.presentation.viewmodels.RedactorViewModel
 import com.example.apptodo.presentation.viewmodels.SettingsViewModel
@@ -42,17 +43,19 @@ class MainActivityCompose : ComponentActivity() {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
             val selectedTheme by settingsViewModel.selectedTheme.collectAsState()
 
-            CompositionLocalProvider(LocalThemeOption provides selectedTheme) {
-                ToDoAppTheme {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.surface),
-                        color = MaterialTheme.colorScheme.surface
-                    ) {
-                        val navController: NavHostController = rememberNavController()
-                        AppScreen(navController = navController)
-                    }
+            ToDoAppTheme(darkTheme = when (selectedTheme){
+                ThemeOption.Light -> false
+                ThemeOption.Dark -> true
+                ThemeOption.System -> isSystemInDarkTheme()
+            }) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface),
+                    color = MaterialTheme.colorScheme.surface
+                ) {
+                    val navController: NavHostController = rememberNavController()
+                    AppScreen(navController = navController, settingsViewModel)
                 }
             }
         }

@@ -28,10 +28,6 @@ import com.example.apptodo.presentation.ThemeOption
  */
 
 
-val LocalThemeOption = staticCompositionLocalOf<ThemeOption> {
-    error("No theme option provided")
-}
-
 private val DarkColorScheme = darkColorScheme(
     primary = ThemeColors.Night.supportSeparator,
     secondary = ThemeColors.Night.supportOverlay,
@@ -73,15 +69,10 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun ToDoAppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val themeOption = LocalThemeOption.current
-    val darkTheme = when (themeOption) {
-        ThemeOption.Light -> false
-        ThemeOption.Dark -> true
-        ThemeOption.System -> isSystemInDarkTheme()
-    }
 
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
