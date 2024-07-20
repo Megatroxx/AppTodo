@@ -1,11 +1,13 @@
 package com.example.apptodo.presentation.navigation
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,12 +29,29 @@ import com.example.apptodo.presentation.viewmodels.SettingsViewModel
  * @param redactorViewModel The view model for the redactor screen, providing data and logic for editing items.
  */
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun AppScreen(
     navController: NavHostController,
     settingsViewModel: SettingsViewModel
 ) {
+
+    val enter = slideInHorizontally(
+        initialOffsetX = { 450 },
+        animationSpec = tween(
+            durationMillis = 250,
+            easing = FastOutSlowInEasing
+        )
+    ) + fadeIn(animationSpec = tween(250))
+
+    val out = slideOutHorizontally(
+        targetOffsetX = { 450 },
+        animationSpec = tween(
+            durationMillis = 250,
+            easing = FastOutSlowInEasing
+        )
+    ) + fadeOut(animationSpec = tween(250))
+
+
     val itemListViewModel: ItemListViewModel = hiltViewModel()
     val redactorViewModel: RedactorViewModel = hiltViewModel()
 
@@ -44,7 +63,9 @@ fun AppScreen(
             route = "appScreen",
             startDestination = DestinationEnum.LIST_SCREEN.destString
         ) {
-            composable(DestinationEnum.LIST_SCREEN.destString) {
+            composable(DestinationEnum.LIST_SCREEN.destString,
+                enterTransition = { enter },
+                exitTransition = { out }) {
                 ItemListScreen(
                     itemListViewModel = itemListViewModel,
                     redactorViewModel = redactorViewModel,
@@ -52,19 +73,24 @@ fun AppScreen(
                 )
             }
 
-            composable(DestinationEnum.REDACTOR_SCREEN.destString) {
+            composable(DestinationEnum.REDACTOR_SCREEN.destString,
+                enterTransition = { enter },
+                exitTransition = { out }) {
                 RedactorScreen(navController = navController,
                     redactorViewModel = redactorViewModel
                 )
             }
-            composable(DestinationEnum.SETTINGS_SCREEN.destString) { backStackEntry ->
-/*                val settingsViewModel: SettingsViewModel = hiltViewModel(backStackEntry)*/
+            composable(DestinationEnum.SETTINGS_SCREEN.destString,
+                enterTransition = { enter },
+                exitTransition = { out }) {
                 SettingsScreen(
                     settingsViewModel = settingsViewModel,
                     navController = navController
                 )
             }
-            composable(DestinationEnum.APP_INFO_SCREEN.destString){
+            composable(DestinationEnum.APP_INFO_SCREEN.destString,
+                enterTransition = { enter },
+                exitTransition = { out }){
                 AppInfoScreen(navController = navController)
             }
         }
