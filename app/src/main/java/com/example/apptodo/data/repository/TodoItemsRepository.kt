@@ -13,6 +13,7 @@ import com.example.apptodo.data.network.model.UpdateToDoListRequest
 import com.example.apptodo.data.network.utils.NetworkChecker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -73,7 +74,7 @@ class TodoItemsRepository @Inject constructor(
         todoDao.deleteItemById(id)
     }
 
-    override suspend fun getItems(): List<TodoItem> {
+    override fun getItems(): Flow<List<TodoItem>> {
         return todoDao.getItems()
     }
 
@@ -129,12 +130,14 @@ class TodoItemsRepository @Inject constructor(
     }
 
     override suspend fun synchronizeData() {
-        val localItems = todoDao.getItems()
+        val localItems = mutableListOf<TodoItem>()
+        todoDao.getItems().collect { items ->
+            localItems.addAll(items)
+        }
 
         val remoteItems = getItemsByNetwork()
 
         val changesToSync = mutableListOf<TodoItem>()
-
 
         localItems.forEach { localItem ->
             val remoteItem = remoteItems.find { it.id == localItem.id }
@@ -146,6 +149,7 @@ class TodoItemsRepository @Inject constructor(
                 }
             }
         }
+
         remoteItems.forEach { remoteItem ->
             val localItem = localItems.find { it.id == remoteItem.id }
             if (localItem == null) {
@@ -165,6 +169,7 @@ class TodoItemsRepository @Inject constructor(
                 status = "ok",
                 list = cloudItemsToUpdate
             )
+
             handle {
                 todoBackend.updateToDoList(updateRequest)
             }

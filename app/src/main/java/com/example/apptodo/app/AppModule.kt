@@ -2,7 +2,9 @@ package com.example.apptodo.app
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.apptodo.data.repository.LastKnownRevisionRepository
+import com.example.apptodo.presentation.common.ThemePreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +27,18 @@ object AppModule {
     @Singleton
     fun provideLastKnownRevisionRepository(): LastKnownRevisionRepository {
         return LastKnownRevisionRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemePreferences(sharedPreferences: SharedPreferences): ThemePreferences {
+        return ThemePreferences(sharedPreferences)
     }
 
 }

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.apptodo.data.entity.TodoItem
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -25,7 +26,7 @@ interface TodoDao {
     suspend fun getItem(id: String): TodoItem?
 
     @Query("SELECT * FROM todo")
-    suspend fun getItems(): MutableList<TodoItem>
+    fun getItems(): Flow<List<TodoItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveList(items: List<TodoItem>)

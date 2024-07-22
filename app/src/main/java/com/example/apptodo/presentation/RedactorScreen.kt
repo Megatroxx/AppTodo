@@ -1,23 +1,34 @@
 package com.example.apptodo.presentation
 
+import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -29,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,10 +48,13 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +68,7 @@ import com.example.apptodo.data.entity.TodoItem
 import com.example.apptodo.presentation.custom_components.BasicAlertDialogCompose
 import com.example.apptodo.presentation.custom_components.Divider
 import com.example.apptodo.presentation.custom_components.PrimaryBodyText
+import com.example.apptodo.presentation.custom_components.Shadow
 import com.example.apptodo.presentation.navigation.DestinationEnum
 import com.example.apptodo.presentation.ui.theme.ToDoAppTheme
 import com.example.apptodo.presentation.ui_state.UIState
@@ -61,6 +77,8 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -91,6 +109,11 @@ fun RedactorScreen(
 
     val showLoadingDialog = remember { mutableStateOf(false) }
 
+    val bottomSheetState = rememberModalBottomSheetState()
+    var isSheetOpen by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     BasicAlertDialogCompose(isLoading = showLoadingDialog.value)
 
     LaunchedEffect(uiState) {
@@ -108,9 +131,17 @@ fun RedactorScreen(
     }
 
     val scrollState = rememberScrollState()
-    ToDoAppTheme {
+    val sheetState = rememberModalBottomSheetState()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ){
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             topBar = {
                 Surface(
                     modifier = Modifier
@@ -119,9 +150,11 @@ fun RedactorScreen(
                             elevation = if (scrollState.value > 0) 6.dp else 0.dp,
                             shape = RoundedCornerShape(0.dp)
                         )
+                        .background(MaterialTheme.colorScheme.surface)
                 ) {
                     TopAppBar(
                         scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                         navigationIcon = {
                             Image(
                                 painter = painterResource(R.drawable.baseline_close_24),
@@ -137,14 +170,16 @@ fun RedactorScreen(
                         },
                         title = {},
                         colors = TopAppBarDefaults.mediumTopAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.surface,
                         ),
                         actions = {
+                            var isClicked by remember { mutableStateOf(false) }
                             Text(
                                 text = stringResource(R.string.save),
                                 modifier = Modifier
                                     .padding(end = 26.dp, top = 6.dp)
                                     .clickable {
+                                        isClicked = true
                                         val newTodoItem = currentItem?.copy(
                                             text = textValue,
                                             relevance = relevance,
@@ -172,7 +207,7 @@ fun RedactorScreen(
                                         redactorViewModel.saveItem(newTodoItem)
                                         navController.navigate(DestinationEnum.LIST_SCREEN.destString)
                                     },
-                                color = MaterialTheme.colorScheme.tertiary,
+                                color = if (!isClicked) MaterialTheme.colorScheme.tertiary else Color.Green,
                             )
 
                         },
@@ -186,6 +221,7 @@ fun RedactorScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(scrollState)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
                 Spacer(modifier = Modifier.padding(vertical = 8.dp))
                 OutlinedTextField(
@@ -225,64 +261,83 @@ fun RedactorScreen(
                 )
                 Spacer(modifier = Modifier.padding(vertical = 12.dp))
                 val expanded = remember { mutableStateOf(false) }
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 26.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    PrimaryBodyText(
-                        text = stringResource(R.string.importance),
+                    Column(
                         modifier = Modifier
-                            .clickable {
-                                expanded.value = true
+                            .weight(1f)
+                            .padding(horizontal = 26.dp)
+                    ) {
+                        PrimaryBodyText(
+                            text = stringResource(R.string.importance),
+                            modifier = Modifier.clickable {
+                                isSheetOpen = true
                             },
-
                         )
 
-                    DropdownMenu(
-                        modifier = Modifier.padding(start = 10.dp),
-                        expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false },
-                    ) {
-                        (Relevance.entries.toTypedArray()).forEach { curImportance ->
-                            DropdownMenuItem(
-                                onClick = {
-                                    relevance = curImportance
-                                    redactorViewModel.updateRelevance(curImportance)
-                                    expanded.value = false
-                                },
-
-                                text = {
-                                    val relevanceText = when (curImportance) {
-                                        Relevance.LOW -> "Низкая"
-                                        Relevance.BASIC -> "Нет"
-                                        Relevance.IMPORTANT -> "Высокая"
+                        if (isSheetOpen){
+                            ModalBottomSheet(
+                                sheetState = bottomSheetState,
+                                onDismissRequest = { isSheetOpen = false},
+                                scrimColor = Color.Black.copy(alpha = 0.32f)
+                            ) {
+                                BottomSheetContent(
+                                    onItemSelected = { selectedRelevance ->
+                                        relevance = selectedRelevance
+                                        redactorViewModel.updateRelevance(selectedRelevance)
                                     }
-                                    Text(text = relevanceText)
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
-                Text(
-                    text =
-                    if (relevance == Relevance.IMPORTANT) "Высокая"
-                    else if (relevance == Relevance.LOW) "Низкая"
-                    else "Нет",
+                Column(
                     modifier = Modifier
-                        .padding(horizontal = 26.dp, vertical = 2.dp)
-                        .clickable {
-                            expanded.value = true
-                        },
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
-                    else if (relevance == Relevance.IMPORTANT)
-                    {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.onTertiary
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 26.dp)
+                            .padding(bottom = 2.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text =
+                            if (relevance == Relevance.IMPORTANT) "Высокая"
+                            else if (relevance == Relevance.LOW) "Низкая"
+                            else "Нет",
+                            modifier = Modifier
+                                .clickable {
+                                    isSheetOpen = true
+                                },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (relevance == Relevance.LOW) MaterialTheme.colorScheme.tertiary
+                            else if (relevance == Relevance.IMPORTANT) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.onTertiary
+                            }
+                        )
+
+                        Text(
+                            text = "Выбрать",
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .clickable {
+                                    isSheetOpen = true
+                                },
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
-                )
-                Divider(modifier = Modifier.padding(vertical = 20.dp, horizontal = 26.dp))
+                    Divider(modifier = Modifier.padding(vertical = 5.dp, horizontal = 26.dp))
+
+                }
                 val deadlineIsSelected =
                     remember { mutableStateOf(currentItem?.deadline != null) }
                 val isChecked = remember { mutableStateOf(currentItem?.deadline != null) }
@@ -334,7 +389,7 @@ fun RedactorScreen(
                             }
                             else {
                                 deadline = ""
-                                redactorViewModel.updateDeadline(null) // Обновление дедлайна в ViewModel
+                                redactorViewModel.updateDeadline(null)
                             }
                         },
                         colors = SwitchDefaults.colors(
@@ -345,30 +400,42 @@ fun RedactorScreen(
                 }
                 Spacer(modifier = Modifier.padding(vertical = 10.dp))
                 Divider(modifier = Modifier.padding(vertical = 10.dp, horizontal = 26.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                var buttonState by remember { mutableStateOf(false) }
+
+                Button(
+                    onClick = {
+                        buttonState = !buttonState
+                        if (currentItem != null) {
+                            redactorViewModel.deleteItem()
+                        }
+                        navController.navigateUp()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (buttonState) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.background,
+                        contentColor = if (buttonState) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.error
+                    ),
                     modifier = Modifier
                         .padding(top = 20.dp, start = 26.dp, bottom = 70.dp)
-                        .clickable {
-                            if (currentItem != null) {
-                                redactorViewModel.deleteItem()
-                            }
-                            navController.navigateUp()
-                        }
+                        .size(width = 210.dp, height = 50.dp)
+                        .shadow(elevation = 2.dp, shape = RoundedCornerShape(percent = 50))
                 ) {
-                    Image(
-                        painter = painterResource(R.drawable.baseline_delete_24),
-                        contentDescription = stringResource(R.string.delete_task),
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(24.dp),
-                        colorFilter = ColorFilter.tint(if (textValue.isEmpty()) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.error)
-                    )
-                    Text(
-                        text = stringResource(R.string.delete_task),
-                        color = if (textValue.isEmpty()) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.baseline_delete_24),
+                            contentDescription = stringResource(R.string.delete_task),
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .size(24.dp),
+                            colorFilter = ColorFilter.tint(if (buttonState) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.error)
+                        )
+                        Text(
+                            text = stringResource(R.string.delete_task),
+                            color = if (buttonState) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
                 }
                 MaterialDialog(
                     dialogState = dateDialogState,
@@ -404,6 +471,75 @@ fun RedactorScreen(
                     }
                 }
             }
+
+
         }
+    }
+}
+
+@Composable
+fun ImportanceItem(relevance: Relevance, onClick: () -> Unit) {
+    val text = when (relevance) {
+        Relevance.BASIC -> "Нет"
+        Relevance.LOW -> "Низкая"
+        Relevance.IMPORTANT -> "Высокая"
+    }
+
+    val defaultBackgroundColor = MaterialTheme.colorScheme.surface
+    val highlightedBackgroundColor = Color.Red
+
+    var isHighlighted by remember { mutableStateOf(false) }
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isHighlighted) highlightedBackgroundColor else defaultBackgroundColor,
+        animationSpec = tween(durationMillis = 1000)
+    )
+
+    val scope = rememberCoroutineScope()
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .clickable {
+                if (relevance == Relevance.IMPORTANT) {
+                    scope.launch {
+                        isHighlighted = true
+                        onClick()
+                        delay(300)
+                        isHighlighted = false
+                    }
+                } else {
+                    onClick()
+                }
+            }
+            .background(backgroundColor)
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(horizontal = 15.dp),
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Divider(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .padding(horizontal = 25.dp)
+        )
+    }
+}
+
+@Composable
+fun BottomSheetContent(onItemSelected: (Relevance) -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        ImportanceItem(relevance = Relevance.BASIC) { onItemSelected(Relevance.BASIC) }
+        ImportanceItem(relevance = Relevance.LOW) { onItemSelected(Relevance.LOW) }
+        ImportanceItem(relevance = Relevance.IMPORTANT) { onItemSelected(Relevance.IMPORTANT) }
     }
 }

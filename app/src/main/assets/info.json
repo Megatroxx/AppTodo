@@ -1,0 +1,207 @@
+{
+  "card": {
+    "log_id": "todoapp",
+    "variables": [
+      {
+        "name": "isVisible",
+        "type": "integer",
+        "value": 0
+      }
+    ],
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "items": [
+            {
+              "type": "image",
+              "image_url": "https://github.com/Megatroxx/DivImages/blob/main/angle-square-left_6407308.svg?raw=true",
+              "width":{
+                "type": "fixed",
+                "value": 25
+              },
+              "margins": {
+                "top": 50,
+                "end": 50,
+                "start": 20
+              },
+              "actions": [
+                {
+                  "log_id": "navigate_to_back",
+                  "url": "navigation-action://navigate?"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "ToDoApp",
+              "text_color": "#000",
+              "font_size": 30,
+              "font_weight": "bold",
+              "text_alignment_horizontal": "center"
+            },
+            {
+              "type": "image",
+              "image_url": "https://github.com/Megatroxx/DivImages/blob/main/div_list_image.jpg?raw=true",
+              "margins": {
+                "top": 30,
+                "bottom": 20,
+                "end": 50,
+                "start": 50
+              },
+              "border": {
+                "corner_radius": 10,
+                "stroke": {
+                  "color": "#ebebeb"
+                },
+                "has_shadow":true,
+                "shadow": {
+                  "offset": {
+                    "x": {
+                      "value": 1
+                    },
+                    "y": {
+                      "value": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "container",
+              "margins": {
+                "start": 5,
+                "end": 5
+              },
+              "items": [
+                {
+                  "type": "state",
+                  "id": "textstate",
+                  "default_state_id": "invisible",
+                  "states": [
+                    {
+                      "state_id": "visible",
+                      "div":{
+                        "type": "container",
+                        "items": [
+                          {
+                            "type": "text",
+                            "text": "Что тут можно делать?",
+                            "margins": {
+                              "start": 25
+                            },
+                            "text_color": "#0b48ff",
+                            "font_size": 20,
+                            "underline": "single",
+                            "actions": [
+                              {
+                                "log_id": "set_visible",
+                                "url": "div-action://set_state?state_id=0/textstate/invisible"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": "- Составляйте свой список дел",
+                            "text_color": "#000",
+                            "font_size": 18,
+                            "margins": {
+                              "start": 20,
+                              "top": 30,
+                              "end": 10
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "- Добавляйте, изменяйте и выполняйте дела",
+                            "text_color": "#000",
+                            "font_size": 18,
+                            "margins": {
+                              "start": 20,
+                              "top": 10,
+                              "end": 10
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "- Ранжируйте дела по важности",
+                            "text_color": "#000",
+                            "font_size": 18,
+                            "margins": {
+                              "start": 20,
+                              "top": 10,
+                              "end": 10
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "- Пользуйтесь приложением в оффлайн режиме и с разных устройств",
+                            "text_color": "#000",
+                            "font_size": 18,
+                            "margins": {
+                              "start": 20,
+                              "top": 10,
+                              "end": 10
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "- Изменяйте тему в настройках приложения",
+                            "text_color": "#000",
+                            "font_size": 18,
+                            "margins": {
+                              "start": 20,
+                              "top": 10,
+                              "end": 10
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "- Не беспокойтесь за данные - они сохранятся, даже если с вашим устройством что-то случится",
+                            "text_color": "#000",
+                            "font_size": 18,
+                            "margins": {
+                              "start": 20,
+                              "top": 10,
+                              "end": 10,
+                              "bottom": 20
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "state_id": "invisible",
+                      "div":{
+                        "type": "container",
+                        "items": [
+                          {
+                            "type": "text",
+                            "text": "Что тут можно делать?",
+                            "margins": {
+                              "start": 25
+                            },
+                            "text_color": "#0b48ff",
+                            "font_size": 20,
+                            "underline": "single",
+                            "actions": [
+                              {
+                                "log_id": "set_visible",
+                                "url": "div-action://set_state?state_id=0/textstate/visible"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
