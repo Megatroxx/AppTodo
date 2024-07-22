@@ -1,6 +1,7 @@
 package com.example.apptodo.domain
 
 import com.example.apptodo.data.entity.TodoItem
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -11,7 +12,7 @@ interface ITodoItemsRepository {
 
     suspend fun addItem(todoItem: TodoItem)
     suspend fun deleteItemById(id: String)
-    suspend fun getItems(): List<TodoItem>
+    fun getItems(): Flow<List<TodoItem>>
     suspend fun getItem(id: String): TodoItem?
     suspend fun checkItem(item: TodoItem, checked: Boolean)
     suspend fun countChecked(): Int

@@ -125,7 +125,15 @@ fun ItemListScreen(
         }
     }
 
-/*    ToDoAppTheme {*/
+    LaunchedEffect(key1 = todoList){
+        Log.d("keyLaunch", todoList.toString())
+    }
+
+    LaunchedEffect(Unit){
+        itemListViewModel.getItems(isVisible.value)
+        Log.d("Launch", todoList.toString())
+    }
+
     Scaffold(modifier = Modifier
         .nestedScroll(scrollBehavior.nestedScrollConnection)
         .background(MaterialTheme.colorScheme.surface),

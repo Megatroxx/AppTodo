@@ -84,13 +84,14 @@ class ItemListViewModel @Inject constructor(
         _uiState.value = UIState.Loading
         runSafeInBackground {
             try {
-                val todoItems = todoItemsRepository.getItems()
-                val filtered = if (filter) todoItems.filter { !it.flagAchievement } else todoItems
-                val countAchievement = todoItemsRepository.countChecked()
+                todoItemsRepository.getItems().collect { todoItems ->
+                    val filtered = if (filter) todoItems.filter { !it.flagAchievement } else todoItems
+                    val countAchievement = todoItemsRepository.countChecked()
 
-                _items.value = filtered
-                _counter.value = countAchievement
-                _uiState.value = UIState.Success
+                    _items.value = filtered
+                    _counter.value = countAchievement
+                    _uiState.value = UIState.Success
+                }
             } catch (e: Exception) {
                 _uiState.value = UIState.Error(e.message ?: "Something went wrong")
             }
